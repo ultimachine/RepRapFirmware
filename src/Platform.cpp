@@ -249,9 +249,46 @@ void Platform::Init()
 
 	fileStructureInitialised = true;
 
-#if !defined(DUET_NG) && !defined(__RADDS__)
+#if !defined(DUET_NG) && !defined(__RADDS__) && !defined(__ARCHIM__)
 	mcpDuet.begin();							// only call begin once in the entire execution, this begins the I2C comms on that channel for all objects
 	mcpExpansion.setMCP4461Address(0x2E);		// not required for mcpDuet, as this uses the default address
+#endif
+
+#if defined(__ARCHIM__)
+	#define MOTOR_CURRENT_PWM_X_PIN   12 //PD8  REF1 TIOB8
+	#define MOTOR_CURRENT_PWM_Y_PIN   58 //PA6  REF2 TIOB2
+	#define MOTOR_CURRENT_PWM_Z_PIN   10 //PC29 REFZ TIOB7
+	#define MOTOR_CURRENT_PWM_E0_PIN   3 //PC28 REF3 TIOA7
+	#define MOTOR_CURRENT_PWM_E1_PIN  11 //PD7  REF4 TIOA8
+	AnalogOut(MOTOR_CURRENT_PWM_X_PIN,0.3,60000);
+	AnalogOut(MOTOR_CURRENT_PWM_Y_PIN,0.3,60000);
+	AnalogOut(MOTOR_CURRENT_PWM_Z_PIN,0.3,60000);
+	AnalogOut(MOTOR_CURRENT_PWM_E0_PIN,0.3,60000);
+	AnalogOut(MOTOR_CURRENT_PWM_E1_PIN,0.3,60000);
+
+	const uint8_t MICROSTEP_MODE_PINS[] = {
+		39,  //PC7 MOD0E1 //As listed in schematic
+		38,  //PC6 MOD1E1
+		37,  //PC5 MOD2E1
+		50,  //PC13 MODE0E2
+		51,  //PC12 MODE1E2
+		96,  //ArchimAddons-92 //PC11 MODE2E2 -AddOns
+		44,  //PC19 MOD0E Z
+		45,  //PC18 MOD1E Z
+		46,  //PC17 MOD2E Z
+		100, //ArchimAddons-105 //PB22 MOD0E3 -AddOns
+		106, //ArchimAddons-106 //PC27 MOD1E3 -AddOns
+		93,  //ArchimAddons-104 //PC20 MOD2E3 -AddOns
+		25,  //PD0 MOD0E4
+		18,  //PA11 MOD1E4
+		19,  //PA10 MOD2E4
+	};
+
+	for(uint8_t pcount=0;pcount< ARRAY_SIZE(MICROSTEP_MODE_PINS);pcount++)
+	{
+		pinMode(MICROSTEP_MODE_PINS[pcount],INPUT_PULLUP);
+	}
+
 #endif
 
 	// DRIVES

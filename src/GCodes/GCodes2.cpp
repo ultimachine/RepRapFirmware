@@ -811,6 +811,21 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 
 	case 85: // Set inactive time
 		break;
+	case 86: // ARCHIM DEBUG STUFF
+		#ifdef __ARCHIM__
+		SerialUSB.println("M86 DEBUG STUFF");
+		#define MOTOR_CURRENT_PWM_X_PIN   12 //PD8  REF1 TIOB8
+		#define MOTOR_CURRENT_PWM_Y_PIN   58 //PA6  REF2 TIOB2
+		#define MOTOR_CURRENT_PWM_Z_PIN   10 //PC29 REFZ TIOB7
+		#define MOTOR_CURRENT_PWM_E0_PIN   3 //PC28 REF3 TIOA7
+		#define MOTOR_CURRENT_PWM_E1_PIN  11 //PD7  REF4 TIOA8
+		AnalogOutDebug(MOTOR_CURRENT_PWM_X_PIN,0.3,60000);
+		AnalogOutDebug(MOTOR_CURRENT_PWM_Y_PIN,0.3,60000);
+		AnalogOutDebug(MOTOR_CURRENT_PWM_Z_PIN,0.3,60000);
+		AnalogOutDebug(MOTOR_CURRENT_PWM_E0_PIN,0.3,60000);
+		AnalogOutDebug(MOTOR_CURRENT_PWM_E1_PIN,0.3,60000);
+		#endif
+		break;
 
 	case 92: // Set/report steps/mm for some axes
 		{
