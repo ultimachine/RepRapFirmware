@@ -52,7 +52,7 @@ Licence: GPL
 
 #if defined(DUET_NG)
 # include "DueXn.h"
-#elif !defined(__RADDS__)
+#elif !defined(__RADDS__) && !defined(__ARCHIM__)
 # include "MCP4461/MCP4461.h"
 #endif
 
@@ -84,8 +84,8 @@ const float INSTANT_DVS[DRIVES] = DRIVES_(15.0, 15.0, 0.2, 2.0, 2.0, 2.0, 2.0, 2
 
 // AXES
 
-const float AXIS_MINIMA[MAX_AXES] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };			// mm
-const float AXIS_MAXIMA[MAX_AXES] = { 230.0, 210.0, 200.0, 0.0, 0.0, 0.0 };		// mm
+const float AXIS_MINIMA[MAX_AXES] = DRIVES_( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 );			// mm
+const float AXIS_MAXIMA[MAX_AXES] = DRIVES_( 230.0, 210.0, 200.0, 0.0, 0.0, 0.0 );		// mm
 
 // Z PROBE
 
@@ -130,7 +130,8 @@ enum class BoardType : uint8_t
 #else
 	Duet_06 = 1,
 	Duet_07 = 2,
-	Duet_085 = 3
+	Duet_085 = 3,
+	Archim = 4
 #endif
 };
 
@@ -686,7 +687,7 @@ private:
 
 #if defined(DUET_NG)
 	size_t numTMC2660Drivers;						// the number of TMC2660 drivers we have, the remaining are simple enable/step/dir drivers
-#elif !defined(__RADDS__)
+#elif !defined(__RADDS__) && !defined(__ARCHIM__)
 	// Digipots
 	MCP4461 mcpDuet;
 	MCP4461 mcpExpansion;
@@ -1259,6 +1260,8 @@ inline float Platform::AdcReadingToPowerVoltage(uint16_t adcVal)
 	return pinDesc.ulPin;
 #elif defined(__RADDS__)
 	return (pinDesc.pPort == PIOC) ? pinDesc.ulPin << 1 : pinDesc.ulPin;
+#elif defined(__ARCHIM__)
+	return pinDesc.ulPin;
 #else
 	return (pinDesc.pPort == PIOA) ? pinDesc.ulPin << 1 : pinDesc.ulPin;
 #endif
@@ -1276,7 +1279,12 @@ inline float Platform::AdcReadingToPowerVoltage(uint16_t adcVal)
 	PIOB->PIO_ODSR = driverMap;
 	PIOD->PIO_ODSR = driverMap;
 	PIOC->PIO_ODSR = driverMap >> 1;		// do this last, it means the processor doesn't need to preserve the register containing driverMap
+#elif defined(__ARCHIM__)
+	PIOB->PIO_ODSR = driverMap;
+	PIOD->PIO_ODSR = driverMap;
+	PIOC->PIO_ODSR = driverMap;
 #else	// Duet
+	#error WHY DUET
 	PIOD->PIO_ODSR = driverMap;
 	PIOC->PIO_ODSR = driverMap;
 	PIOA->PIO_ODSR = driverMap >> 1;		// do this last, it means the processor doesn't need to preserve the register containing driverMap
@@ -1295,6 +1303,10 @@ inline float Platform::AdcReadingToPowerVoltage(uint16_t adcVal)
 	PIOC->PIO_ODSR = 0;
 	PIOB->PIO_ODSR = 0;
 	PIOA->PIO_ODSR = 0;
+#elif defined(__ARCHIM__)
+	PIOD->PIO_ODSR = 0;
+	PIOC->PIO_ODSR = 0;
+	PIOB->PIO_ODSR = 0;
 #else	// Duet
 	PIOD->PIO_ODSR = 0;
 	PIOC->PIO_ODSR = 0;

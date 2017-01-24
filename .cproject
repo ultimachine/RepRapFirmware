@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/Lwip}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/Lwip/lwip/src/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/EMAC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.571434619" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SAM3X8E__"/>
@@ -99,11 +100,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/asf/thirdparty/CMSIS/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/variants/duet}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Webserver}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim/Lwip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim/EMAC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/Lwip}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/Lwip/lwip/src/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet/EMAC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Duet}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1548770846" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SAM3X8E__"/>
@@ -114,7 +114,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Archim/Lwip/lwip/test|src/Duet|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test|src/DuetNG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test|src/DuetNG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -236,7 +236,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Archim/Lwip/lwip/test|src/Webserver|src/RADDS|src/DuetNG/DuetEthernet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/Webserver|src/RADDS|src/DuetNG/DuetEthernet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -496,7 +496,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Archim/Lwip/lwip/test|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPServer|src/DuetNG/DuetEthernet/Wiznet/Internet/DNS|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPClient|src/DuetNG/DuetEthernet/Wiznet/Internet/MQTT|src/DuetNG/DuetEthernet/Wiznet/Internet/SNMP|src/DuetNG/DuetEthernet/Wiznet/Internet/SNTP|src/DuetNG/DuetEthernet/Wiznet/Internet/TFTP|src/DuetNG/DuetEthernet/Wiznet/Internet/httpServer|src/DuetNG/DuetEthernet/Wiznet/Application|src/DuetNG/DuetEthernet/Ethernet3|src/DuetNG/DuetEthernet/Ethernet3/examples|src/RADDS|src/DuetNG/DuetWiFi" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPServer|src/DuetNG/DuetEthernet/Wiznet/Internet/DNS|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPClient|src/DuetNG/DuetEthernet/Wiznet/Internet/MQTT|src/DuetNG/DuetEthernet/Wiznet/Internet/SNMP|src/DuetNG/DuetEthernet/Wiznet/Internet/SNTP|src/DuetNG/DuetEthernet/Wiznet/Internet/TFTP|src/DuetNG/DuetEthernet/Wiznet/Internet/httpServer|src/DuetNG/DuetEthernet/Wiznet/Application|src/DuetNG/DuetEthernet/Ethernet3|src/DuetNG/DuetEthernet/Ethernet3/examples|src/RADDS|src/DuetNG/DuetWiFi" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -551,6 +551,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim/Lwip}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim/Lwip/lwip/src/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim/EMAC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Archim}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1378467027" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SAM3X8E__"/>
@@ -613,6 +614,7 @@
 									<listOptionValue builtIn="false" value="__ARCHIM__"/>
 									<listOptionValue builtIn="false" value="printf=iprintf"/>
 								</option>
+								<option id="gnu.cpp.compiler.option.dialect.std.1916056283" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.133056018" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 						</toolChain>

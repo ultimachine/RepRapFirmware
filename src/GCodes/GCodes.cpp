@@ -39,10 +39,10 @@
 
 #define DEGREE_SYMBOL	"\xC2\xB0"				// degree-symbol encoding in UTF8
 
-const char GCodes::axisLetters[MAX_AXES] = { 'X', 'Y', 'Z', 'U', 'V', 'W' };
+const char GCodes::axisLetters[] = { 'X', 'Y', 'Z', 'U', 'V', 'W' };
 
 const char* PAUSE_G = "pause.g";
-const char* HomingFileNames[MAX_AXES] = { "homex.g", "homey.g", "homez.g", "homeu.g", "homev.g", "homew.g" };
+const char* HomingFileNames[] = { "homex.g", "homey.g", "homez.g", "homeu.g", "homev.g", "homew.g" };
 const char* HOME_ALL_G = "homeall.g";
 const char* HOME_DELTA_G = "homedelta.g";
 const char* DefaultHeightMapFile = "heightmap.csv";

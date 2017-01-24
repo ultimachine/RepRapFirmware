@@ -8,7 +8,7 @@ const size_t NumFirmwareUpdateModules = 1;
 #define IAP_FIRMWARE_FILE "RepRapFirmware.bin"
 
 // Default board type
-#define DEFAULT_BOARD_TYPE BoardType::Archim_3b
+#define DEFAULT_BOARD_TYPE BoardType::Archim
 
 #define SUPPORT_INKJET		0					// set nonzero to support inkjet control
 #define SUPPORT_ROLAND		0					// set nonzero to support Roland mill
@@ -16,22 +16,22 @@ const size_t NumFirmwareUpdateModules = 1;
 // The physical capabilities of the machine
 
 const size_t DRIVES = 5;						// The number of drives in the machine, including X, Y, and Z plus extruder drives
-#define DRIVES_(a,b,c,d,e,f,g,h,i,j) { a,b,c,d,e } //HELPER MACRO TO REDUCE SIZE OF ARRAYS
+#define DRIVES_(a,b,c,d,e,...) { a,b,c,d,e } //HELPER MACRO TO REDUCE SIZE OF ARRAYS
 const size_t MaxDriversPerAxis = 4;				// The maximum number of stepper drivers assigned to one axis
 
 const int8_t HEATERS = 4;						// The number of heaters in the machine; 0 is the heated bed even if there isn't one
 #define HEATERS_(a,b,c,d,e,f,g,h) { a,b,c,d } //HELPER MACRO TO REDUCE SIZE OF ARRAYS
 
-const size_t MAX_AXES = 3;						// The maximum number of movement axes in the machine, usually just X, Y and Z, <= DRIVES
+const size_t MAX_AXES = DRIVES;						// The maximum number of movement axes in the machine, usually just X, Y and Z, <= DRIVES
 const size_t MIN_AXES = 3;						// The minimum and default number of axes
-const size_t DELTA_AXES = 3;					// The number of axis involved in delta movement
-const size_t CART_AXES = 3;						// The number of Cartesian axes
+//const size_t DELTA_AXES = 3;					// The number of axis involved in delta movement
+//const size_t CART_AXES = 3;						// The number of Cartesian axes
 const size_t MaxExtruders = DRIVES - MIN_AXES;	// The maximum number of extruders
 
-const size_t NUM_SERIAL_CHANNELS = 1;			// The number of serial IO channels (USB and two auxiliary UARTs)
+const size_t NUM_SERIAL_CHANNELS = 2;			// The number of serial IO channels (USB and two auxiliary UARTs)
 #define SERIAL_MAIN_DEVICE SerialUSB
 #define SERIAL_AUX_DEVICE Serial
-#define SERIAL_AUX2_DEVICE Serial1
+//#define SERIAL_AUX2_DEVICE Serial1
 
 // The numbers of entries in each array must correspond with the values of DRIVES, AXES, or HEATERS. Set values to -1 to flag unavailability.
 
@@ -42,7 +42,7 @@ const Pin ENABLE_PINS[DRIVES] = {
 		48,
 		104, //ArchimAddons-96 //PC10 EN Z -AddOns
 		108, //ArchimAddons-97 //PB24 EN3 -Addons
-		101 };
+		28 };
 const Pin STEP_PINS[DRIVES] = { 40, 49, 36, 78, 26 };
 const Pin DIRECTION_PINS[DRIVES] = {
 		59,
@@ -65,7 +65,7 @@ const Pin END_STOP_PINS[DRIVES] = { //11, 28, 60, 31, 24, 46, 45, 44, X9 };
 		14, //PD4 MIN ES1
 		29, //PD6 MIN ES2
 		31, //PA7 MIN ES3
-		NoPin,NoPin,NoPin,
+		NoPin,NoPin
 };
 
 // Indices for motor current digipots (if any): first 4 are for digipot 1 (on duet), second 4 for digipot 2 (on expansion board)
@@ -80,23 +80,23 @@ const Pin END_STOP_PINS[DRIVES] = { //11, 28, 60, 31, 24, 46, 45, 44, X9 };
 const bool HEAT_ON = true;												// false for inverted heater (e.g. Duet v0.6), true for not (e.g. Duet v0.4)
 
 const Pin TEMP_SENSE_PINS[HEATERS] = { // Analogue pin numbers
-		10, // D10 PB19 THERM AN1 (T0)
-		9,  // D9 PB18 THERM AN2  (T1)
-		8,  // D8 PB17 THERM AN4  (T2)
-		11, // D11 PB20 THERM AN3 (BED)
+		A10, // A10 PB19 THERM AN1 (T0)
+		A9,  // A9 PB18 THERM AN2  (T1)
+		A8,  // A8 PB17 THERM AN4  (T2)
+		A11, // A11 PB20 THERM AN3 (BED)
 };
 
 const Pin HEAT_ON_PINS[HEATERS] = {
+		9, // D9 PC21 BED_PWM
 		6, // D6 PC24 FET_PWM3
 		7, // D7 PC23 FET_PWM4
 		8, // D8 PC22 FET_PWM5
-		9, // D9 PC21 BED_PWM
 };
 
 // Default thermistor parameters
 // Bed thermistor: http://uk.farnell.com/epcos/b57863s103f040/sensor-miniature-ntc-10k/dp/1299930?Ntt=129-9930
 // Hot end thermistor: http://www.digikey.co.uk/product-search/en?x=20&y=11&KeyWords=480-3137-ND
-const float BED_R25 = 10000.0;
+const float BED_R25 = 100000.0;
 const float BED_BETA = 3988.0;
 const float BED_SHC = 0.0;
 const float EXT_R25 = 100000.0;
@@ -152,7 +152,7 @@ const Pin COOLING_FAN_RPM_PIN = NoPin; //23;										// Pin PA15
 // SD cards
 const size_t NumSdCards = 1;
 const Pin SdCardDetectPins[NumSdCards] = {85}; //{13, NoPin};
-const Pin SdWriteProtectPins[NumSdCards] = {NoPin, NoPin};
+const Pin SdWriteProtectPins[NumSdCards] = {NoPin};
 const Pin SdSpiCSPins[1] = {NoPin}; //{67};										// Note: this clashes with inkjet support
 
 #if SUPPORT_INKJET
@@ -178,9 +178,10 @@ const Pin ROLAND_RTS_PIN = 17;											// Expansion pin 12, PA13_RXD1
 // This is the mapping from logical pins 60+ to firmware pin numbers
 const Pin SpecialPinMap[] =
 {
-	19, 18,	17, 16, 23, 	// PA10/RXD0 PA11/TXD0 PA12/RXD1 PA13/TXD1 PA14/RTS1
-	20, 21, 67, 52, 		// PB12/TWD1 PB13/TWCK1 PB16/DAC1 PB21/AD14
-	36						// PC4
+	NoPin
+//	19, 18,	17, 16, 23, 	// PA10/RXD0 PA11/TXD0 PA12/RXD1 PA13/TXD1 PA14/RTS1
+//	20, 21, 67, 52, 		// PB12/TWD1 PB13/TWCK1 PB16/DAC1 PB21/AD14
+//	36						// PC4
 };
 
 // This next definition defines the highest one.

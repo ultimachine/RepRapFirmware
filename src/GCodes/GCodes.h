@@ -124,7 +124,7 @@ public:
 	size_t GetNumAxes() const { return numAxes; }
 	size_t GetNumExtruders() const { return numExtruders; }
 
-	static const char axisLetters[MAX_AXES]; 							// 'X', 'Y', 'Z'
+	static const char axisLetters[]; 							// 'X', 'Y', 'Z', 'U', 'V', 'W'
 
 private:
 	enum class CannedMoveType : uint8_t { none, relative, absolute };

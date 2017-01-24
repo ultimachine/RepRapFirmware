@@ -7,7 +7,10 @@
 # if defined(__SAM3X8E__)
 #  if defined(__RADDS__)
 #   define PLATFORM RADDS
-#  else
+#  elif defined(__ARCHIM__)
+#   define PLATFORM Archim
+#  else //TODO - Why not check for __DUET__ ?
+#   #error Assumed platform is Duet
 #   define PLATFORM Duet
 #  endif
 # elif defined(__SAM4E8E__)

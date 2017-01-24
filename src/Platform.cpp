@@ -192,14 +192,17 @@ void Platform::Init()
 	// Deal with power first
 	pinMode(ATX_POWER_PIN, OUTPUT_LOW);
 
-	SetBoardType(BoardType::Auto);
+	//SetBoardType(BoardType::Auto);
+	SetBoardType(DEFAULT_BOARD_TYPE);
 
 	// Real-time clock
 	realTime = 0;
 
 	// Comms
 	baudRates[0] = MAIN_BAUD_RATE;
+#if NUM_SERIAL_CHANNELS >= 1
 	baudRates[1] = AUX_BAUD_RATE;
+#endif
 #if NUM_SERIAL_CHANNELS >= 2
 	baudRates[2] = AUX2_BAUD_RATE;
 #endif
@@ -298,7 +301,7 @@ void Platform::Init()
 	ARRAY_INIT(driveStepsPerUnit, DRIVE_STEPS_PER_UNIT);
 	ARRAY_INIT(instantDvs, INSTANT_DVS);
 
-#if !defined(DUET_NG) && !defined(__RADDS__)
+#if !defined(DUET_NG) && !defined(__RADDS__) && !defined(__ARCHIM__)
 	// Motor current setting on Duet 0.6 and 0.8.5
 	ARRAY_INIT(potWipes, POT_WIPES);
 	senseResistor = SENSE_RESISTOR;
@@ -1979,7 +1982,9 @@ void Platform::UpdateMotorCurrent(size_t driver)
 		// else we can't set the current
 #elif defined (__RADDS__)
 		// we can't set the current on RADDS
-#else
+#elif defined(__ARCHIM__)
+		//TODO?
+#else //What board is this code for????
 		unsigned short pot = (unsigned short)((0.256*current*8.0*senseResistor + maxStepperDigipotVoltage/2)/maxStepperDigipotVoltage);
 		if (driver < 4)
 		{
@@ -1988,34 +1993,34 @@ void Platform::UpdateMotorCurrent(size_t driver)
 		}
 		else
 		{
-# ifndef DUET_NG
+          #ifndef DUET_NG
 			if (board == BoardType::Duet_085)
 			{
-# endif
+          #endif
 				// Extruder 0 is on DAC channel 0
 				if (driver == 4)
 				{
 					const float dacVoltage = max<float>(current * 0.008 * senseResistor + stepperDacVoltageOffset, 0.0);	// the voltage we want from the DAC relative to its minimum
 					const float dac = dacVoltage/stepperDacVoltageRange;
-# ifdef DUET_NG
-					AnalogOut(DAC1, dac);
-# else
-					AnalogOut(DAC0, dac);
-# endif
+                    #ifdef DUET_NG
+					  AnalogOut(DAC1, dac);
+                    #else
+					  AnalogOut(DAC0, dac);
+                    #endif
 				}
 				else
 				{
 					mcpExpansion.setNonVolatileWiper(potWipes[driver-1], pot);
 					mcpExpansion.setVolatileWiper(potWipes[driver-1], pot);
 				}
-# ifndef DUET_NG
+          #if !defined(DUET_NG)
 			}
 			else if (driver < 8)		// on a Duet 0.6 we have a maximum of 8 drives
 			{
 				mcpExpansion.setNonVolatileWiper(potWipes[driver], pot);
 				mcpExpansion.setVolatileWiper(potWipes[driver], pot);
 			}
-# endif
+          #endif
 		}
 #endif
 	}
