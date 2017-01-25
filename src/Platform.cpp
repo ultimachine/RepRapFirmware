@@ -226,7 +226,7 @@ void Platform::Init()
 	ARRAY_INIT(netMask, DefaultNetMask);
 	ARRAY_INIT(gateWay, DefaultGateway);
 
-#if defined(DUET_NG) && defined(DUET_WIFI)
+#if defined(DUET_NG) && defined(DUET_WIFI) || defined(__ARCHIM__)
 	memset(macAddress, 0xFF, sizeof(macAddress));
 #else
 	ARRAY_INIT(macAddress, DefaultMacAddress);
@@ -413,7 +413,7 @@ void Platform::Init()
 	extrusionAncilliaryPwmLogicalPin = Fan0LogicalPin;
 	extrusionAncilliaryPwmFirmwarePin = COOLING_FAN_PINS[0];
 	extrusionAncilliaryPwmInvert =
-#if defined(DUET_NG) || defined(__RADDS__)
+#if defined(DUET_NG) || defined(__RADDS__) || defined(__ARCHIM__)
 			false;
 #else
 			(board == BoardType::Duet_06 || board == BoardType::Duet_07);
@@ -569,7 +569,7 @@ void Platform::InitZProbe()
 	zProbeOnFilter.Init(0);
 	zProbeOffFilter.Init(0);
 
-#if defined(DUET_NG) || defined(__RADDS__)
+#if defined(DUET_NG) || defined(__RADDS__) || defined(__ARCHIM__)
 	zProbeModulationPin = Z_PROBE_MOD_PIN;
 #else
 	zProbeModulationPin = (board == BoardType::Duet_07 || board == BoardType::Duet_085) ? Z_PROBE_MOD_PIN07 : Z_PROBE_MOD_PIN;
@@ -2218,7 +2218,7 @@ float Platform::GetFanRPM()
 
 bool Platform::FansHardwareInverted(size_t fanNumber) const
 {
-#if defined(DUET_NG) || defined(__RADDS__)
+#if defined(DUET_NG) || defined(__RADDS__) || defined(__ARCHIM__)
 	return false;
 #else
 	// The cooling fan output pin gets inverted on a Duet 0.6 or 0.7.
@@ -2612,6 +2612,8 @@ void Platform::SetBoardType(BoardType bt)
 		board = BoardType::DuetEthernet_10;
 #elif defined(__RADDS__)
 		board = BoardType::RADDS_15;
+#elif defined(__ARCHIM__)
+		board = BoardType::Archim;
 #else
 		// Determine whether this is a Duet 0.6 or a Duet 0.8.5 board.
 		// If it is a 0.85 board then DAC0 (AKA digital pin 67) is connected to ground via a diode and a 2.15K resistor.
@@ -2645,6 +2647,8 @@ const char* Platform::GetElectronicsString() const
 	case BoardType::DuetEthernet_10:		return "Duet Ethernet 1.0";
 #elif defined(__RADDS__)
 	case BoardType::RADDS_15:				return "RADDS 1.5";
+#elif defined(__ARCHIM__)
+	case BoardType::Archim:					return "Archim";
 #else
 	case BoardType::Duet_06:				return "Duet 0.6";
 	case BoardType::Duet_07:				return "Duet 0.7";
@@ -2665,6 +2669,8 @@ const char* Platform::GetBoardString() const
 	case BoardType::DuetEthernet_10:		return "duetethernet10";
 #elif defined(__RADDS__)
 	case BoardType::RADDS_15:				return "radds15";
+#elif defined(__ARCHIM__)
+	case BoardType::Archim:					return "archim";
 #else
 	case BoardType::Duet_06:				return "duet06";
 	case BoardType::Duet_07:				return "duet07";
@@ -2703,7 +2709,7 @@ bool Platform::GetFirmwarePin(int logicalPin, PinAccess access, Pin& firmwarePin
 		   )
 		{
 			firmwarePin = COOLING_FAN_PINS[logicalPin - Fan0LogicalPin];
-#if !defined(DUET_NG) && !defined(__RADDS__)
+#if !defined(DUET_NG) && !defined(__RADDS__) && !defined(__ARCHIM__)
 			invert = (board == BoardType::Duet_06 || board == BoardType::Duet_07);
 #endif
 		}

@@ -83,9 +83,11 @@ const float DRIVE_STEPS_PER_UNIT[DRIVES] = DRIVES_(87.4890, 87.4890, 4000.0, 420
 const float INSTANT_DVS[DRIVES] = DRIVES_(15.0, 15.0, 0.2, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0);								// mm/sec
 
 // AXES
-
-const float AXIS_MINIMA[MAX_AXES] = DRIVES_( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 );			// mm
-const float AXIS_MAXIMA[MAX_AXES] = DRIVES_( 230.0, 210.0, 200.0, 0.0, 0.0, 0.0 );		// mm
+#ifndef AXES_
+#define AXES_(a,b,c,d,e,f) {a,b,c,d,e,f}
+#endif
+const float AXIS_MINIMA[MAX_AXES] = AXES_( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 );			// mm
+const float AXIS_MAXIMA[MAX_AXES] = AXES_( 230.0, 210.0, 200.0, 0.0, 0.0, 0.0 );		// mm
 
 // Z PROBE
 
@@ -127,11 +129,12 @@ enum class BoardType : uint8_t
 	DuetEthernet_10 = 1
 #elif defined(__RADDS__)
 	RADDS_15 = 1
+#elif defined(__ARCHIM__)
+	Archim = 1,
 #else
 	Duet_06 = 1,
 	Duet_07 = 2,
 	Duet_085 = 3,
-	Archim = 4
 #endif
 };
 

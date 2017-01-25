@@ -22,6 +22,7 @@ const size_t MaxDriversPerAxis = 4;				// The maximum number of stepper drivers 
 const int8_t HEATERS = 4;						// The number of heaters in the machine; 0 is the heated bed even if there isn't one
 #define HEATERS_(a,b,c,d,e,f,g,h) { a,b,c,d } //HELPER MACRO TO REDUCE SIZE OF ARRAYS
 
+#define AXES_(a,b,c,d,e,...) { a,b,c,d,e } //HELPER MACRO TO REDUCE SIZE OF ARRAYS
 const size_t MAX_AXES = DRIVES;						// The maximum number of movement axes in the machine, usually just X, Y and Z, <= DRIVES
 const size_t MIN_AXES = 3;						// The minimum and default number of axes
 //const size_t DELTA_AXES = 3;					// The number of axis involved in delta movement
@@ -80,10 +81,10 @@ const Pin END_STOP_PINS[DRIVES] = { //11, 28, 60, 31, 24, 46, 45, 44, X9 };
 const bool HEAT_ON = true;												// false for inverted heater (e.g. Duet v0.6), true for not (e.g. Duet v0.4)
 
 const Pin TEMP_SENSE_PINS[HEATERS] = { // Analogue pin numbers
-		A10, // A10 PB19 THERM AN1 (T0)
-		A9,  // A9 PB18 THERM AN2  (T1)
-		A8,  // A8 PB17 THERM AN4  (T2)
-		A11, // A11 PB20 THERM AN3 (BED)
+		11, // A11 PB20 THERM AN3 (BED)
+		10, // A10 PB19 THERM AN1 (T0)
+		9,  // A9 PB18 THERM AN2  (T1)
+		8,  // A8 PB17 THERM AN4  (T2)
 };
 
 const Pin HEAT_ON_PINS[HEATERS] = {
