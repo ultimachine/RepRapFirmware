@@ -1018,7 +1018,7 @@ OutputBuffer *RepRap::GetConfigResponse()
 #endif
 	response->catf("\",\"firmwareName\":\"%s\"", FIRMWARE_NAME);
 	response->catf(",\"firmwareVersion\":\"%s\"", VERSION);
-#if defined(DUET_NG) && defined(DUET_WIFI) || defined(__ARCHIM__)
+#if defined(DUET_NG) && defined(DUET_WIFI) || defined(__USES_WIFI__)
 	response->catf(",\"dwsVersion\":\"%s\"", network->GetWiFiServerVersion());
 #endif
 	response->catf(",\"firmwareDate\":\"%s\"", DATE);

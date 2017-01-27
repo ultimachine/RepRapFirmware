@@ -114,7 +114,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test|src/DuetNG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/DuetNG|src/Archim|src/Archim/Lwip/lwip/test|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -142,7 +142,7 @@
 							<option id="cdt.managedbuild.option.gnu.cross.path.1491883811" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="C:\Arduino-1.5.8\hardware\tools\gcc-arm-none-eabi-4.8.3-2014q1\bin" valueType="string"/>
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.353555591" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.857793524" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/RepRapFirmware}/Release" id="cdt.managedbuild.builder.gnu.cross.1026937542" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/RepRapFirmware}/Release" id="cdt.managedbuild.builder.gnu.cross.1026937542" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1415072364" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.769576359" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -236,7 +236,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/Webserver|src/RADDS|src/DuetNG/DuetEthernet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Archim|src/Duet|src/Archim/Lwip/lwip/test|src/Webserver|src/RADDS|src/DuetNG/DuetEthernet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -351,7 +351,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Archim/Lwip/lwip/test|src/Webserver|src/Duet/Lwip/lwip/src/core/ipv6|src/Duet/Lwip/lwip/test|src/DuetNG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/DuetNG|src/Archim|src/Archim/Lwip/lwip/test|src/Webserver|src/Duet/Lwip/lwip/src/core/ipv6|src/Duet/Lwip/lwip/test" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -496,7 +496,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Duet|src/Archim/Lwip/lwip/test|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPServer|src/DuetNG/DuetEthernet/Wiznet/Internet/DNS|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPClient|src/DuetNG/DuetEthernet/Wiznet/Internet/MQTT|src/DuetNG/DuetEthernet/Wiznet/Internet/SNMP|src/DuetNG/DuetEthernet/Wiznet/Internet/SNTP|src/DuetNG/DuetEthernet/Wiznet/Internet/TFTP|src/DuetNG/DuetEthernet/Wiznet/Internet/httpServer|src/DuetNG/DuetEthernet/Wiznet/Application|src/DuetNG/DuetEthernet/Ethernet3|src/DuetNG/DuetEthernet/Ethernet3/examples|src/RADDS|src/DuetNG/DuetWiFi" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Archim|src/Duet|src/Archim/Lwip/lwip/test|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPServer|src/DuetNG/DuetEthernet/Wiznet/Internet/DNS|src/DuetNG/DuetEthernet/Wiznet/Internet/FTPClient|src/DuetNG/DuetEthernet/Wiznet/Internet/MQTT|src/DuetNG/DuetEthernet/Wiznet/Internet/SNMP|src/DuetNG/DuetEthernet/Wiznet/Internet/SNTP|src/DuetNG/DuetEthernet/Wiznet/Internet/TFTP|src/DuetNG/DuetEthernet/Wiznet/Internet/httpServer|src/DuetNG/DuetEthernet/Wiznet/Application|src/DuetNG/DuetEthernet/Ethernet3|src/DuetNG/DuetEthernet/Ethernet3/examples|src/RADDS|src/DuetNG/DuetWiFi" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -620,7 +620,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Archim|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test|src/DuetNG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Archim/Lwip/lwip/src/core/ipv6|src/Archim/Lwip/lwip/test|src/DuetNG|src/Duet|src/Duet/Lwip/lwip/src/core/ipv6|src/RADDS|src/Duet/Lwip/lwip/test" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
