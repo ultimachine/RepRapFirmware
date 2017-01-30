@@ -772,7 +772,15 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 			}
 		}
 		break;
-
+	case 60:  //M60 List peripheral clock enabled states
+		#ifdef __SAM3X8E__
+			#define PRINT_PERIPH(id) { SerialUSB.print("ID: "); SerialUSB.print(id); SerialUSB.print("  State: "); SerialUSB.println( pmc_is_periph_clk_enabled(id) ); }
+			#define ID_PERIPH_COUNT 45
+			// Print all peripheral clocks
+			for(uint8_t i = 0; i < ID_PERIPH_COUNT; i++) {
+				PRINT_PERIPH(i);
+			}
+		#endif
 	case 80:	// ATX power on
 		platform->SetAtxPower(true);
 		break;
