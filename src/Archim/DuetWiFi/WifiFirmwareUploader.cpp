@@ -41,6 +41,10 @@ const uint32_t ESP_UNKNOWN_ADDR = 0x40001121;		// not used
 const uint32_t ESP_USER_DATA_RAM_ADDR = 0x3ffe8000;	// &user data ram
 const uint32_t ESP_IRAM_ADDR = 0x40100000;			// instruction RAM
 const uint32_t ESP_FLASH_ADDR = 0x40200000;			// address of start of Flash
+
+#if !defined(IRAM_ADDR) && defined(IRAM0_ADDR)
+#define IRAM_ADDR IRAM0_ADDR
+#endif
 const uint32_t ESP_FLASH_READ_STUB_BEGIN = IRAM_ADDR + 0x18;
 
 // Messages corresponding to result codes, should make sense when followed by " error"

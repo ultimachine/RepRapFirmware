@@ -136,6 +136,11 @@ void Network::Start()
 
 	state = starting;
 
+	#if !defined(SPI) && defined(SPI0)
+		#define SPI SPI0
+		#define SPI_IRQn SPI0_IRQn
+		#define ID_SPI ID_SPI0
+	#endif
 	(void) SPI->SPI_SR;				// clear any pending interrupt
 	NVIC_SetPriority(SPI_IRQn, 10);
 	NVIC_EnableIRQ(SPI_IRQn);
@@ -1162,7 +1167,8 @@ void Network::ResetWiFiForExternalUpload()
 	ResetWiFiForUpload();
 
 	// Set our TxD pin low to make things easier for the FTDI chip to drive the ESP RxD input
-	pinMode(APIN_UART1_TXD, OUTPUT_LOW);
+	//pinMode(APIN_UART1_TXD, OUTPUT_LOW);
+	pinMode(EspUartTXD, OUTPUT_LOW);
 }
 
 // End
