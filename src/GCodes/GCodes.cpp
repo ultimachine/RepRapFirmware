@@ -33,7 +33,7 @@
 #include "Tool.h"
 #include "Webserver.h"
 
-#ifdef DUET_NG
+#if defined(DUET_NG) || defined(USES_WIFI)
 #include "FirmwareUpdater.h"
 #endif
 
@@ -401,7 +401,7 @@ void GCodes::Spin()
 			break;
 
 		case GCodeState::flashing1:
-#ifdef DUET_NG
+#if defined(DUET_NG) || defined(USES_WIFI)
 			// Update additional modules before the main firmware
 			if (FirmwareUpdater::IsReady())
 			{

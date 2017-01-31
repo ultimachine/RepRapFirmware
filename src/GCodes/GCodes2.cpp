@@ -18,7 +18,7 @@
 #include "Tool.h"
 #include "Version.h"
 
-#ifdef DUET_NG
+#if defined(DUET_NG) || defined(USES_WIFI)
 #include "FirmwareUpdater.h"
 #endif
 
@@ -3469,7 +3469,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 			}
 
 			// Check prerequisites of all modules to be updated, if any are not met then don't update any of them
-#ifdef DUET_NG
+#if defined(DUET_NG) || defined(USES_WIFI)
 			if (!FirmwareUpdater::CheckFirmwareUpdatePrerequisites(firmwareUpdateModuleMap))
 			{
 				firmwareUpdateModuleMap = 0;
