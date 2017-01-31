@@ -6,6 +6,8 @@
 const size_t NumFirmwareUpdateModules = 1;
 #define IAP_UPDATE_FILE "iap.bin"
 #define IAP_FIRMWARE_FILE "RepRapFirmware.bin"
+#define WIFI_FIRMWARE_FILE	"DuetWiFiServer.bin"
+#define WIFI_WEB_FILE		"DuetWebControl.bin"
 
 // Default board type
 #define DEFAULT_BOARD_TYPE BoardType::Archim

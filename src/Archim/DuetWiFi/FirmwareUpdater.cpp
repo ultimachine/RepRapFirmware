@@ -12,7 +12,7 @@
 #include "Platform.h"
 #include "RepRap.h"
 
-#ifdef DUET_WIFI
+#if defined(DUET_WIFI) || defined(USES_WIFI)
 #include "WifiFirmwareUploader.h"
 #endif
 
@@ -26,7 +26,7 @@ namespace FirmwareUpdater
 	// Return true if yes, else print a message and return false.
 	bool CheckFirmwareUpdatePrerequisites(uint8_t moduleMap)
 	{
-#ifdef DUET_WIFI
+#if defined(DUET_WIFI) || defined(USES_WIFI)
 		if ((moduleMap & (1 << WifiExternalFirmwareModule)) != 0 && (moduleMap & ((1 << WifiFirmwareModule) | (1 << WifiFilesModule))) != 0)
 		{
 			reprap.GetPlatform()->Message(GENERIC_MESSAGE, "Invalid combination of firmware update modules\n");
@@ -48,7 +48,7 @@ namespace FirmwareUpdater
 
 	bool IsReady()
 	{
-#ifdef DUET_WIFI
+#if defined(DUET_WIFI) || defined(USES_WIFI)
 		return reprap.GetNetwork()->GetWifiUploader()->IsReady();
 #endif
 #ifdef DUET_ETHERNET
@@ -58,7 +58,7 @@ namespace FirmwareUpdater
 
 	void UpdateModule(unsigned int module)
 	{
-#ifdef DUET_WIFI
+#if defined(DUET_WIFI) || defined(USES_WIFI)
 		switch(module)
 		{
 		case WifiExternalFirmwareModule:
