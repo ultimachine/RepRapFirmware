@@ -1297,7 +1297,7 @@ void Platform::SoftwareReset(uint16_t reason)
 
 // Interrupts
 
-#ifndef DUET_NG
+#if !defined(DUET_NG) && !defined(USES_WIFI)
 void NETWORK_TC_HANDLER()
 {
 	tc_get_status(NETWORK_TC, NETWORK_TC_CHAN);
@@ -1340,7 +1340,7 @@ void Platform::InitialiseInterrupts()
 	NVIC_SetPriority(STEP_TC_IRQN, 2);						// set high priority for this IRQ; it's time-critical
 	NVIC_EnableIRQ(STEP_TC_IRQN);
 
-#ifndef DUET_NG
+#if !defined(DUET_NG) && !defined(USES_WIFI)
 	// Timer interrupt to keep the networking timers running (called at 16Hz)
 	pmc_enable_periph_clk((uint32_t) NETWORK_TC_IRQN);
 	tc_init(NETWORK_TC, NETWORK_TC_CHAN, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | TC_CMR_TCCLKS_TIMER_CLOCK2);
