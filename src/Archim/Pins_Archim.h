@@ -192,12 +192,27 @@ const int HighestLogicalPin = 60 + ARRAY_SIZE(SpecialPinMap) - 1;		// highest lo
 const uint32_t IAP_FLASH_START = 0x000F0000;
 const uint32_t IAP_FLASH_END = 0x000FFBFF;		// don't touch the last 1KB, it's used for NvData
 
+// Duet pin numbers to control the WiFi interface
+//(ESP-PIN)  //(SAM-PIN)
+//RST //PB27 D13
+//EN  //PA3 D60
+//GPIO0 //PB25 D2
+//GPIO4 //PB13 D21
+//CS0 //PIO_PA29A_SPI0_NPCS1 D87
+const Pin EspResetPin = 13;	//PB27 D13					// Low on this in holds the WiFi module in reset (ESP_RESET)
+const Pin EspEnablePin = 60; //PA3 D60					// High to enable the WiFi module, low to power it down (ESP_CH_PD)
+const Pin EspTransferRequestPin = 2; //PB25 D2			// Input from the WiFi module indicating that it wants to transfer data (ESP GPIO0)
+const Pin SamTfrReadyPin =21; //PB13 D21				// Output from the SAM to the WiFi module indicating we can accept a data transfer (ESP GPIO4 via 7474)
+const Pin SamCsPin = 87; //PIO_PA29A_SPI0_NPCS1 D87		// SPI NPCS pin, input from WiFi module
+const Pin EspUartTXD = 1; //UTXD PA9 D1 (5-pin host connector on Archim)
+#define USES_WIFI
+/*
 // Timer allocation
 #define NETWORK_TC			(TC1)
 #define NETWORK_TC_CHAN		(1)
 #define NETWORK_TC_IRQN		TC4_IRQn
 #define NETWORK_TC_HANDLER	TC4_Handler
-
+*/
 #define STEP_TC				(TC1)
 #define STEP_TC_CHAN		(0)
 #define STEP_TC_IRQN		TC3_IRQn
