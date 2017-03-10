@@ -97,7 +97,7 @@ void RepRap::Init()
 	processingConfig = false;
 
 	// Enable network (unless it's disabled)
-#ifdef DUET_NG
+#if defined(DUET_NG) || defined(USES_WIFI)
 	network->Activate();			// Need to do this here, as the configuration GCodes may set IP address etc.
 	if (!network->IsEnabled())
 	{

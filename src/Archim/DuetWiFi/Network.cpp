@@ -34,8 +34,10 @@ static bool spi_dma_check_rx_complete();
 static TransactionBuffer inBuffer, outBuffer;
 static uint32_t dummyOutBuffer[TransactionBuffer::headerDwords] = {0, 0, 0, 0, 0};
 
+uint32_t dbg_transfer_requests_counter=1;
 void EspTransferRequestIsr()
 {
+	dbg_transfer_requests_counter++;
 	reprap.GetNetwork()->EspRequestsTransfer();
 }
 
@@ -100,13 +102,13 @@ void Network::Start()
 	pinMode(SamTfrReadyPin, OUTPUT_LOW);
 
 	// Set up our data ready pin (ESP GPIO0) as an output and set it high ready to boot the ESP from flash
-	pinMode(EspTransferRequestPin, OUTPUT_HIGH);
+pinMode(EspTransferRequestPin, OUTPUT_HIGH);
 
 	// GPIO2 also needs to be high to boot. It's connected to MISO on the SAM, so set the pullup resistor on that pin
-	pinMode(APIN_SPI_MISO, INPUT_PULLUP);
+pinMode(APIN_SPI_MISO, INPUT_PULLUP);
 
 	// Set our CS input (ESP GPIO15) low ready for booting the ESP. This also clears the transfer ready latch.
-	pinMode(SamCsPin, OUTPUT_LOW);
+pinMode(SamCsPin, OUTPUT_LOW);
 
 	// Make sure it has time to reset - no idea how long it needs, but 20ms should be plenty
 	delay(50);
@@ -137,11 +139,11 @@ void Network::Start()
 	state = starting;
 
 	#if !defined(SPI) && defined(SPI0)
-		#define SPI SPI0
+		//#define SPI SPI0
 		#define SPI_IRQn SPI0_IRQn
 		#define ID_SPI ID_SPI0
 	#endif
-	(void) SPI->SPI_SR;				// clear any pending interrupt
+	(void) SPI0->SPI_SR;				// clear any pending interrupt
 	NVIC_SetPriority(SPI_IRQn, 10);
 	NVIC_EnableIRQ(SPI_IRQn);
 
@@ -161,7 +163,7 @@ void Network::Stop()
 		}
 		digitalWrite(EspResetPin, LOW);	// put the ESP back into reset
 		NVIC_DisableIRQ(SPI_IRQn);
-		spi_disable(SPI);
+		spi_disable(SPI0);
 		spi_dma_check_rx_complete();
 		spi_dma_disable();
 
@@ -710,7 +712,7 @@ void Network::DiscardMessage()
 		TryStartTransfer();
 	}
 }
-
+uint32_t dbg_spihandler_counter = 1;
 void Network::Diagnostics(MessageType mtype)
 {
 	platform->Message(mtype, "=== Network ===\n");
@@ -720,6 +722,11 @@ void Network::Diagnostics(MessageType mtype)
 								: "running";
 	platform->MessageF(mtype, "WiFiServer is %s\n", text);
 	platform->MessageF(mtype, "SPI underruns %u, overruns %u\n", spiTxUnderruns, spiRxOverruns);
+	platform->MessageF(mtype,"activated: %u\n",activated);
+	platform->MessageF(mtype,"state: %u\n",state);
+	platform->MessageF(mtype,"EspTransferRequestPin: %u\n",digitalRead(EspTransferRequestPin));
+	platform->MessageF(mtype,"dbg_spihandler_counter: %u\n",dbg_spihandler_counter);
+	platform->MessageF(mtype,"dbg_transfer_requests_counter: %u\n",dbg_transfer_requests_counter);
 }
 
 void Network::Enable()
@@ -891,7 +898,7 @@ static void spi_tx_dma_setup(const TransactionBuffer *buf, uint32_t maxTransmitL
 	DMAC->DMAC_EBCISR;		// clear any pending interrupts
 
 	dmac_channel_set_source_addr(DMAC, CONF_SPI_DMAC_TX_CH, reinterpret_cast<uint32_t>(buf));
-	dmac_channel_set_destination_addr(DMAC, CONF_SPI_DMAC_TX_CH, reinterpret_cast<uint32_t>(& SPI->SPI_TDR));
+	dmac_channel_set_destination_addr(DMAC, CONF_SPI_DMAC_TX_CH, reinterpret_cast<uint32_t>(& SPI0->SPI_TDR));
 	dmac_channel_set_descriptor_addr(DMAC, CONF_SPI_DMAC_TX_CH, 0);
 	dmac_channel_set_ctrlA(DMAC, CONF_SPI_DMAC_TX_CH, maxTransmitLength | DMAC_CTRLA_SRC_WIDTH_WORD | DMAC_CTRLA_DST_WIDTH_BYTE);
 	dmac_channel_set_ctrlB(DMAC, CONF_SPI_DMAC_TX_CH,
@@ -911,7 +918,7 @@ static void spi_rx_dma_setup(const TransactionBuffer *buf)
 #if USE_DMAC
 	DMAC->DMAC_EBCISR;		// clear any pending interrupts
 
-	dmac_channel_set_source_addr(DMAC, CONF_SPI_DMAC_RX_CH, reinterpret_cast<uint32_t>(& SPI->SPI_RDR));
+	dmac_channel_set_source_addr(DMAC, CONF_SPI_DMAC_RX_CH, reinterpret_cast<uint32_t>(& SPI0->SPI_RDR));
 	dmac_channel_set_destination_addr(DMAC, CONF_SPI_DMAC_RX_CH, reinterpret_cast<uint32_t>(buf));
 	dmac_channel_set_descriptor_addr(DMAC, CONF_SPI_DMAC_RX_CH, 0);
 	dmac_channel_set_ctrlA(DMAC, CONF_SPI_DMAC_RX_CH, TransactionBuffer::MaxTransferBytes | DMAC_CTRLA_SRC_WIDTH_BYTE | DMAC_CTRLA_DST_WIDTH_WORD);
@@ -991,7 +998,7 @@ void Network::SetupSpi()
 
 	pmc_enable_periph_clk(ID_SPI);
 	spi_dma_disable();
-	spi_reset(SPI);				// this clears the transmit and receive registers and puts the SPI into slave mode
+	spi_reset(SPI0);				// this clears the transmit and receive registers and puts the SPI into slave mode
 
 	// Set up the SPI pins
 	ConfigurePin(g_APinDescription[APIN_SPI_SCK]);
@@ -1055,31 +1062,38 @@ pre(state == idle || state == sending)
 	// DMA may have transferred an extra word to the SPI transmit data register. We need to clear this.
 	// The only way I can find to do this is to issue a software reset to the SPI system.
 	// Fortunately, this leaves the SPI system in slave mode.
-	spi_reset(SPI);
-	spi_set_bits_per_transfer(SPI, 0, SPI_CSR_BITS_8_BIT);
+	spi_reset(SPI0);
+	spi_set_bits_per_transfer(SPI0, 0, SPI_CSR_BITS_8_BIT);
 
 	// Set up the DMA controller
 	spi_slave_dma_setup(dataToSend, allowReceive);
-	spi_enable(SPI);
+	spi_enable(SPI0);
 
 	// Enable the end-of transfer interrupt
-	(void)SPI->SPI_SR;						// clear any pending interrupt
-	SPI->SPI_IER = SPI_IER_NSSR;			// enable the NSS rising interrupt
+	(void)SPI0->SPI_SR;						// clear any pending interrupt
+	SPI0->SPI_IER = SPI_IER_NSSR;			// enable the NSS rising interrupt
 
 	// Tell the ESP that we are ready to accept data
 	digitalWrite(SamTfrReadyPin, HIGH);
 }
 
 // SPI interrupt handler, called when NSS goes high
+void SPI0_Handler()
+{
+	dbg_spihandler_counter++;
+	reprap.GetNetwork()->SpiInterrupt();
+}
+
 void SPI_Handler()
 {
+	dbg_spihandler_counter++;
 	reprap.GetNetwork()->SpiInterrupt();
 }
 
 void Network::SpiInterrupt()
 {
-	uint32_t status = SPI->SPI_SR;			// read status and clear interrupt
-	SPI->SPI_IDR = SPI_IER_NSSR;			// disable the interrupt
+	uint32_t status = SPI0->SPI_SR;			// read status and clear interrupt
+	SPI0->SPI_IDR = SPI_IER_NSSR;			// disable the interrupt
 	if ((status & SPI_SR_NSSR) != 0)
 	{
 		if (state == sendReceivePending || state == receivePending)
@@ -1092,7 +1106,7 @@ void Network::SpiInterrupt()
 			spi_tx_dma_disable();
 			dmac_channel_suspend(DMAC, CONF_SPI_DMAC_RX_CH);	// suspend the receive channel, don't disable it because the FIFO needs to empty first
 #endif
-			spi_disable(SPI);
+			spi_disable(SPI0);
 			digitalWrite(SamTfrReadyPin, LOW);
 			if (state == sendReceivePending)
 			{
@@ -1111,7 +1125,7 @@ void Network::SpiInterrupt()
 		else if (state == sending)
 		{
 			spi_tx_dma_disable();
-			spi_disable(SPI);
+			spi_disable(SPI0);
 			digitalWrite(SamTfrReadyPin, LOW);
 			outBuffer.Clear();									// don't send the data again
 			if ((status & SPI_SR_UNDES) != 0)

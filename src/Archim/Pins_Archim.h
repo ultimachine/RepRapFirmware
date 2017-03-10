@@ -65,9 +65,12 @@ const Pin DIRECTION_PINS[DRIVES] = {
 // RepRapFirmware only has a single endstop per axis.
 // Gcode defines if it is a max ("high end") or min ("low end") endstop and sets if it is active HIGH or LOW.
 const Pin END_STOP_PINS[DRIVES] = { //11, 28, 60, 31, 24, 46, 45, 44, X9 };
-		14, //PD4 MIN ES1
-		29, //PD6 MIN ES2
-		31, //PA7 MIN ES3
+		//14, //PD4 MIN ES1
+		//29, //PD6 MIN ES2
+		//31, //PA7 MIN ES3
+        32, //PD10 MAX ES1
+        15, //PD5 MAX ES2
+		30, //PD9 MAX ES3
 		NoPin,NoPin
 };
 
@@ -159,7 +162,6 @@ const Pin SdWriteProtectPins[NumSdCards] = {NoPin};
 const Pin SdSpiCSPins[1] = {NoPin}; //{67};										// Note: this clashes with inkjet support
 
 #if SUPPORT_INKJET
-#error WTF_INKJECT
 // Inkjet control pins
 const Pin INKJET_SERIAL_OUT = 21;										// Serial bitpattern into the shift register
 const Pin INKJET_SHIFT_CLOCK = 20;										// Shift the register
@@ -201,11 +203,11 @@ const uint32_t IAP_FLASH_END = 0x000FFBFF;		// don't touch the last 1KB, it's us
 //GPIO0 //PB25 D2
 //GPIO4 //PB13 D21
 //CS0 //PIO_PA29A_SPI0_NPCS1 D87
-const Pin EspResetPin = 13;	//PB27 D13					// Low on this in holds the WiFi module in reset (ESP_RESET)
-const Pin EspEnablePin = 60; //PA3 D60					// High to enable the WiFi module, low to power it down (ESP_CH_PD)
-const Pin EspTransferRequestPin = 2; //PB25 D2			// Input from the WiFi module indicating that it wants to transfer data (ESP GPIO0)
-const Pin SamTfrReadyPin =21; //PB13 D21				// Output from the SAM to the WiFi module indicating we can accept a data transfer (ESP GPIO4 via 7474)
-const Pin SamCsPin = 87; //PIO_PA29A_SPI0_NPCS1 D87		// SPI NPCS pin, input from WiFi module
+const Pin EspResetPin = 20; //PB12 //13;	//PB27 D13					// Low on this in holds the WiFi module in reset (ESP_RESET)
+const Pin EspEnablePin = 66; //PB15 //60; //PA3 D60					// High to enable the WiFi module, low to power it down (ESP_CH_PD)
+const Pin EspTransferRequestPin = 89; //PB14 //2; //PB25 D2			// Input from the WiFi module indicating that it wants to transfer data (ESP GPIO0)
+const Pin SamTfrReadyPin =  21; //PB13 D21				// Output from the SAM to the WiFi module indicating we can accept a data transfer (ESP GPIO4 via 7474)
+const Pin SamCsPin = 77; //PIO_PA29A_SPI0_NPCS1 D87		// SPI NPCS pin, input from WiFi module
 const Pin EspUartTXD = 1; //UTXD PA9 D1 (5-pin host connector on Archim)
 #define USES_WIFI
 /*

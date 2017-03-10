@@ -73,6 +73,8 @@ void Network::Exit()
 	Stop();
 }
 
+#error WTF
+
 void Network::ClearIpAddress()
 {
 	for (size_t i = 0; i < ARRAY_SIZE(ipAddress); ++i)
@@ -156,7 +158,7 @@ void Network::Stop()
 		}
 		digitalWrite(EspResetPin, LOW);	// put the ESP back into reset
 		NVIC_DisableIRQ(SPI_IRQn);
-		spi_disable(SPI);
+		spi_disable(SPI0);
 		spi_dma_check_rx_complete();
 		spi_dma_disable();
 
@@ -986,7 +988,7 @@ void Network::SetupSpi()
 
 	pmc_enable_periph_clk(ID_SPI);
 	spi_dma_disable();
-	spi_reset(SPI);				// this clears the transmit and receive registers and puts the SPI into slave mode
+	spi_reset(SPI0);				// this clears the transmit and receive registers and puts the SPI into slave mode
 
 	// Set up the SPI pins
 	ConfigurePin(g_APinDescription[APIN_SPI_SCK]);
@@ -1050,12 +1052,12 @@ pre(state == idle || state == sending)
 	// DMA may have transferred an extra word to the SPI transmit data register. We need to clear this.
 	// The only way I can find to do this is to issue a software reset to the SPI system.
 	// Fortunately, this leaves the SPI system in slave mode.
-	spi_reset(SPI);
+	spi_reset(SPI0);
 	spi_set_bits_per_transfer(SPI, 0, SPI_CSR_BITS_8_BIT);
 
 	// Set up the DMA controller
 	spi_slave_dma_setup(dataToSend, allowReceive);
-	spi_enable(SPI);
+	spi_enable(SPI0);
 
 	// Enable the end-of transfer interrupt
 	(void)SPI->SPI_SR;						// clear any pending interrupt
@@ -1087,7 +1089,7 @@ void Network::SpiInterrupt()
 			spi_tx_dma_disable();
 			dmac_channel_suspend(DMAC, CONF_SPI_DMAC_RX_CH);	// suspend the receive channel, don't disable it because the FIFO needs to empty first
 #endif
-			spi_disable(SPI);
+			spi_disable(SPI0);
 			digitalWrite(SamTfrReadyPin, LOW);
 			if (state == sendReceivePending)
 			{
@@ -1106,7 +1108,7 @@ void Network::SpiInterrupt()
 		else if (state == sending)
 		{
 			spi_tx_dma_disable();
-			spi_disable(SPI);
+			spi_disable(SPI0);
 			digitalWrite(SamTfrReadyPin, LOW);
 			outBuffer.Clear();									// don't send the data again
 			if ((status & SPI_SR_UNDES) != 0)

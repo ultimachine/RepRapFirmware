@@ -22,6 +22,8 @@
 #include "FirmwareUpdater.h"
 #endif
 
+#include "he280_accel.h"
+
 const char* BED_EQUATION_G = "bed.g";
 const char* RESUME_G = "resume.g";
 const char* CANCEL_G = "cancel.g";
@@ -781,6 +783,22 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 				PRINT_PERIPH(i);
 			}
 		#endif
+	case 61: //M61 Activate network
+		reprap.GetNetwork()->Activate();
+		break;
+	case 62: //M61 Start network
+		reprap.GetNetwork()->Start();
+		break;
+	case 63: //M61 SPI Status
+		SerialUSB.print("Status Register - SPI0_SR:");
+		SerialUSB.println(SPI0->SPI_SR,BIN);
+		SerialUSB.print("Status Register - SPI0_MR:");
+		SerialUSB.println(SPI0->SPI_MR,BIN);
+		SerialUSB.print("Chip Select Register - SPI0_CSR[0]:");
+		SerialUSB.println(SPI0->SPI_CSR[0],BIN);
+		SerialUSB.print("SPI Read Data Register  - SPI0->SPI_RDR:");
+		SerialUSB.println(SPI0->SPI_RDR,BIN);
+		break;
 	case 80:	// ATX power on
 		platform->SetAtxPower(true);
 		break;
@@ -1748,7 +1766,23 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 		break;
 
 		// For case 226, see case 25
-
+	case 260: // M260 accelerometer init
+		accelerometer_init();
+		break;
+	case 261: // M261 accelerometer status
+		reply.printf("Z_PROBE_PIN: %u", digitalRead(Z_PROBE_PIN) );
+		accelerometer_status();
+		break;
+	case 262: // M262 accelerometer thresholds
+		accelerometer_recv(0x32);
+		if (gb.Seen('S'))
+		{
+			uint8_t val = gb.GetIValue();
+			reply.printf("Setting Threshold To: ", val );
+			accelerometer_write(0x32,uint8_t(val)); //INT1 THRESHOLD
+			accelerometer_recv(0x32);
+		}
+		break;
 	case 280:	// Servos
 		if (gb.Seen('P'))
 		{
