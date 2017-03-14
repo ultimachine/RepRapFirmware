@@ -268,6 +268,8 @@ void Platform::Init()
 	AnalogOut(MOTOR_CURRENT_PWM_Z_PIN,0.3,60000);
 	AnalogOut(MOTOR_CURRENT_PWM_E0_PIN,0.3,60000);
 	AnalogOut(MOTOR_CURRENT_PWM_E1_PIN,0.3,60000);
+	ConfigurePin(g_APinDescription[MOTOR_CURRENT_PWM_E0_PIN]);
+	ConfigurePin(g_APinDescription[MOTOR_CURRENT_PWM_E1_PIN]);
 
 	const uint8_t MICROSTEP_MODE_PINS[] = {
 		39,  //PC7 MOD0E1 //As listed in schematic
