@@ -85,7 +85,6 @@ void accelerometer_init()
   accelerometer_write(0x24,0b01001010); // FIFO enable [6]. Latch INT1 [3]. Latch INT2 until cleared by read [1].
   accelerometer_recv(0x24);
 
-
   //INT1_CFG (30h)
   accelerometer_recv(0x30);
   accelerometer_write(0x30,0b100000); // ZHI events enabled [5]. ZLO events enabled [4].

@@ -71,7 +71,8 @@ const Pin END_STOP_PINS[DRIVES] = { //11, 28, 60, 31, 24, 46, 45, 44, X9 };
         32, //PD10 MAX ES1
         15, //PD5 MAX ES2
 		30, //PD9 MAX ES3
-		NoPin,NoPin
+		31, //RepRap wiki "Configuring RepRapFirmware for a Cartesian printer" refers to this as the E0 end stop to be used for a switch probe. Because reasons?
+		NoPin
 };
 
 // Indices for motor current digipots (if any): first 4 are for digipot 1 (on duet), second 4 for digipot 2 (on expansion board)

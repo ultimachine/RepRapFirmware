@@ -1770,7 +1770,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 		accelerometer_init();
 		break;
 	case 261: // M261 accelerometer status
-		reply.printf("Z_PROBE_PIN: %u", digitalRead(Z_PROBE_PIN) );
+		reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
 		accelerometer_status();
 		break;
 	case 262: // M262 accelerometer thresholds

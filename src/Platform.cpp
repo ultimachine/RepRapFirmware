@@ -630,9 +630,11 @@ int Platform::GetZProbeReading() const
 	{
 		switch (zProbeType)
 		{
+		case 4:		// Switch connected to E0 endstop input
+			zProbeVal = !digitalRead(endStopPins[E0_AXIS]);
+			break;
 		case 1:		// Simple or intelligent IR sensor
 		case 3:		// Alternate sensor
-		case 4:		// Switch connected to E0 endstop input
 		case 5:		// Switch connected to Z probe input
 		case 6:		// Switch connected to E1 endstop input
 			zProbeVal = (int) ((zProbeOnFilter.GetSum() + zProbeOffFilter.GetSum()) / (8 * Z_PROBE_AVERAGE_READINGS));
@@ -1791,6 +1793,7 @@ uint32_t Platform::GetAllEndstopStates() const
 // Return the Z probe result. We assume that if the Z probe is used as an endstop, it is used as the low stop.
 EndStopHit Platform::GetZProbeResult() const
 {
+	return GetZProbeReading() ? EndStopHit::noStop : EndStopHit::lowHit;
 	const int zProbeVal = GetZProbeReading();
 	const int zProbeADValue = GetCurrentZProbeParameters().adcValue;
 	return (zProbeVal >= zProbeADValue) ? EndStopHit::lowHit
