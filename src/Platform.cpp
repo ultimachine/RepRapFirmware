@@ -631,7 +631,7 @@ int Platform::GetZProbeReading() const
 		switch (zProbeType)
 		{
 		case 4:		// Switch connected to E0 endstop input
-			zProbeVal = !digitalRead(endStopPins[E0_AXIS]);
+			zProbeVal = digitalRead(endStopPins[E0_AXIS]);
 			break;
 		case 1:		// Simple or intelligent IR sensor
 		case 3:		// Alternate sensor
