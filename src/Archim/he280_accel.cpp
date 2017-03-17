@@ -74,6 +74,11 @@ void accelerometer_init()
   accelerometer_write(0x20,0b10011100); // ODR 5.376kHz in LPMode [7-4]. Low power enable [3]. Z enable [2].
   accelerometer_recv(0x20);
 
+  //CTRL_REG3 (22h)
+  accelerometer_recv(0x22);
+  accelerometer_write(0x22,0b01000000); // CLICK interrupt on INT1 pin [7]. AOI (And Or Interrupt) on INT1 en [6]. AOI on INT2 en [5].
+  accelerometer_recv(0x22);
+
   //CTRL_REG4 (23h)
   accelerometer_recv(0x23);
   accelerometer_write(0x23,0b00110000); // Full-scale selection 16G [5-4]. High resolution mode [3].
