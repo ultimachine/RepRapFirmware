@@ -258,11 +258,6 @@ void Platform::Init()
 #endif
 
 #if defined(__ARCHIM__)
-	#define MOTOR_CURRENT_PWM_X_PIN   12 //PD8  REF1 TIOB8
-	#define MOTOR_CURRENT_PWM_Y_PIN   58 //PA6  REF2 TIOB2
-	#define MOTOR_CURRENT_PWM_Z_PIN   10 //PC29 REFZ TIOB7
-	#define MOTOR_CURRENT_PWM_E0_PIN   3 //PC28 REF3 TIOA7
-	#define MOTOR_CURRENT_PWM_E1_PIN  11 //PD7  REF4 TIOA8
 	AnalogOut(MOTOR_CURRENT_PWM_X_PIN,0.3,60000);
 	AnalogOut(MOTOR_CURRENT_PWM_Y_PIN,0.3,60000);
 	AnalogOut(MOTOR_CURRENT_PWM_Z_PIN,0.3,60000);
@@ -1988,7 +1983,11 @@ void Platform::UpdateMotorCurrent(size_t driver)
 #elif defined (__RADDS__)
 		// we can't set the current on RADDS
 #elif defined(__ARCHIM__)
-		//TODO?
+    float currentPinValue = current / 2500;
+    SerialUSB.print("Driver: "); SerialUSB.print(driver);
+    SerialUSB.print("  Current: "); SerialUSB.print(current);
+    SerialUSB.print("  Value: "); SerialUSB.println(currentPinValue);
+	  AnalogOut(MOTOR_CURRENT_PINS[driver],currentPinValue,60000);
 #else //What board is this code for????
 		unsigned short pot = (unsigned short)((0.256*current*8.0*senseResistor + maxStepperDigipotVoltage/2)/maxStepperDigipotVoltage);
 		if (driver < 4)

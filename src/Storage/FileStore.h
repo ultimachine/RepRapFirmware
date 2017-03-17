@@ -4,7 +4,7 @@
 #define FILESTORE_H
 
 #include "Core.h"
-#include "Libraries/Fatfs/ff.h"
+#include "Libraries/FatFs/ff.h"
 
 const size_t FileBufLen = 256;						// 512 would be more efficient, but need to free up some RAM first
 
