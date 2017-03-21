@@ -37,6 +37,8 @@
 #include "FirmwareUpdater.h"
 #endif
 
+#include "he280_accel.h"
+
 #define DEGREE_SYMBOL	"\xC2\xB0"				// degree-symbol encoding in UTF8
 
 const char GCodes::axisLetters[] = { 'X', 'Y', 'Z', 'U', 'V', 'W' };
@@ -1661,6 +1663,9 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 		return false;
 
 	case 2:	// Probe the bed
+#if defined(__ARCHIM__)
+    accelerometer_status();
+#endif
 		if (millis() - lastProbedTime >= (uint32_t)(platform->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 		{
 			const float height = (GetAxisIsHomed(Z_AXIS))
