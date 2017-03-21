@@ -502,6 +502,9 @@ void GCodes::Spin()
 			break;
 
 		case GCodeState::gridProbing2a:	// ready to probe the current grid probe point
+#if defined(__ARCHIM__)
+      accelerometer_status();
+#endif
 			if (millis() - lastProbedTime >= (uint32_t)(reprap.GetPlatform()->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 			{
 				// Probe the bed at the current XY coordinates
