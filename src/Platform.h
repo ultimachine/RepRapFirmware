@@ -1170,6 +1170,11 @@ inline uint16_t Platform::GetRawZProbeReading() const
 			const bool b = ReadPin(endStopPins[E0_AXIS]);
 			return (b) ? 4000 : 0;
 		}
+	case 8: //SeeMeCNC Probe
+		{
+			const bool b = ReadPin(endStopPins[E0_AXIS]);
+			return (b) ? 4000 : 0;
+		}
 
 	case 5:
 		return (ReadPin(zProbePin)) ? 4000 : 0;

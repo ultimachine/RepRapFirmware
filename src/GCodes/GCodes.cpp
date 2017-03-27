@@ -503,7 +503,9 @@ void GCodes::Spin()
 
 		case GCodeState::gridProbing2a:	// ready to probe the current grid probe point
 #if defined(__ARCHIM__)
+    if(platform->GetZProbeType() == 8){
       accelerometer_status();
+    }
 #endif
 			if (millis() - lastProbedTime >= (uint32_t)(reprap.GetPlatform()->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 			{
@@ -1667,7 +1669,9 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 
 	case 2:	// Probe the bed
 #if defined(__ARCHIM__)
-    accelerometer_status();
+    if(platform->GetZProbeType() == 8){
+      accelerometer_status();
+    }
 #endif
 		if (millis() - lastProbedTime >= (uint32_t)(platform->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 		{

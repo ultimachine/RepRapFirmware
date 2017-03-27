@@ -613,6 +613,13 @@ void Platform::InitZProbe()
 		pinMode(zProbePin, INPUT_PULLUP);
 		pinMode(zProbeModulationPin, OUTPUT_LOW);		// we now set the modulation output high during probing only when using probe types 4 and higher
 		break;	//TODO (DeltaProbe)
+
+  case 8: //SeeMeCNC Probe
+		AnalogInEnableChannel(zProbeAdcChannel, false);
+		pinMode(zProbePin, INPUT_PULLUP);
+		pinMode(endStopPins[E0_AXIS], INPUT_PULLUP);
+		pinMode(zProbeModulationPin, OUTPUT_LOW);		// we now set the modulation output high during probing only when using probe types 4 and higher
+		break;
 	}
 }
 
@@ -625,6 +632,9 @@ int Platform::GetZProbeReading() const
 	{
 		switch (zProbeType)
 		{
+		case 8:		// SeeMeCNC Probe Switch connected to E0 endstop input
+			zProbeVal = digitalRead(endStopPins[E0_AXIS]);
+			break;
 		case 4:		// Switch connected to E0 endstop input
 			zProbeVal = digitalRead(endStopPins[E0_AXIS]);
 			break;
@@ -714,7 +724,7 @@ float Platform::GetZProbeTravelSpeed() const
 
 void Platform::SetZProbeType(int pt)
 {
-	zProbeType = (pt >= 0 && pt <= 7) ? pt : 0;
+	zProbeType = (pt >= 0 && pt <= 8) ? pt : 0;
 	InitZProbe();
 }
 
