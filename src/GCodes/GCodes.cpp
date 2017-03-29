@@ -504,7 +504,12 @@ void GCodes::Spin()
 		case GCodeState::gridProbing2a:	// ready to probe the current grid probe point
 #if defined(__ARCHIM__)
     if(platform->GetZProbeType() == 8){
-      accelerometer_status();
+      if(accelerometer_status() < 0){
+        reply.copy("ERROR: Accelerometer I2C error");
+        error = true;
+        gb.SetState(GCodeState::normal);
+        break;
+      }
     }
 #endif
 			if (millis() - lastProbedTime >= (uint32_t)(reprap.GetPlatform()->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
@@ -1670,7 +1675,11 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 	case 2:	// Probe the bed
 #if defined(__ARCHIM__)
     if(platform->GetZProbeType() == 8){
-      accelerometer_status();
+      if(accelerometer_status() < 0){
+				platform->Message(GENERIC_MESSAGE, "Error: Accelerometer I2C error\n");
+        cannedCycleMoveCount++;
+        break;
+      }
     }
 #endif
 		if (millis() - lastProbedTime >= (uint32_t)(platform->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))

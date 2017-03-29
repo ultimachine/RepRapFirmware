@@ -1767,22 +1767,29 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 
 		// For case 226, see case 25
 	case 260: // M260 accelerometer init
-		accelerometer_init();
+    if(accelerometer_init() < 0){
+      reply.copy("Error Initializing Accelerometer");
+    }else{
+      reply.copy("Accelerometer Initialized");
+    }
 		break;
 	case 261: // M261 accelerometer status
-		reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
-		accelerometer_status();
+    reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
+    if(accelerometer_status() < 0){
+      reply.copy("Accelerometer I2C Error");
+    }else{
+      reply.copy("Accelerometer Online");
+    }
 		break;
 	case 262: // M262 accelerometer thresholds
-		accelerometer_recv(0x32);
-		if (gb.Seen('S'))
-		{
-			uint8_t val = gb.GetIValue();
-			reply.printf("Setting Threshold To: ", val );
-			accelerometer_write(0x32,uint8_t(val)); //INT1 THRESHOLD
-			accelerometer_recv(0x32);
-		}
-		break;
+      reply.printf("Current Threshold: %u", accelerometer_recv(0x32) );
+      if (gb.Seen('S'))
+      {
+        uint8_t val = gb.GetIValue();
+        reply.printf("Setting Threshold To: %u", val );
+        accelerometer_write(0x32,uint8_t(val)); //INT1 THRESHOLD
+      }
+    break;
 	case 280:	// Servos
 		if (gb.Seen('P'))
 		{
