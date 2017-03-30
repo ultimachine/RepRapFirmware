@@ -1997,6 +1997,7 @@ void Platform::UpdateMotorCurrent(size_t driver)
     SerialUSB.print("Driver: "); SerialUSB.print(driver);
     SerialUSB.print("  Current: "); SerialUSB.print(current);
     SerialUSB.print("  Value: "); SerialUSB.println(currentPinValue);
+    MessageF(GENERIC_MESSAGE, "Driver: %u  Current: %u  Value: %f\n", driver, current, currentPinValue);
 	  AnalogOut(MOTOR_CURRENT_PINS[driver],currentPinValue,60000);
 #else //What board is this code for????
 		unsigned short pot = (unsigned short)((0.256*current*8.0*senseResistor + maxStepperDigipotVoltage/2)/maxStepperDigipotVoltage);
