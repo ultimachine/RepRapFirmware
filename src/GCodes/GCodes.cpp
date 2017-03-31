@@ -329,8 +329,11 @@ void GCodes::Spin()
 				cancelWait = isWaiting = false;
 				gb.SetState(GCodeState::normal);
 			}
-			// In Marlin emulation mode we should return some sort of (undocumented) message here every second...
-			isWaiting = true;
+			else
+			{
+				CheckReportDue(gb, reply);
+				isWaiting = true;
+			}
 			break;
 
 		case GCodeState::pausing1:
@@ -3333,6 +3336,99 @@ bool GCodes::WriteConfigOverrideFile(StringRef& reply, const char *fileName) con
 	return !ok;
 }
 
+// Store a standard-format temperature report in 'reply'. This doesn't put a newline character at the end.
+void GCodes::GenerateTemperatureReport(StringRef& reply) const
+{
+	const int8_t bedHeater = reprap.GetHeat()->GetBedHeater();
+	const int8_t chamberHeater = reprap.GetHeat()->GetChamberHeater();
+	reply.copy("T:");
+	for (int8_t heater = 0; heater < HEATERS; heater++)
+	{
+		if (heater != bedHeater && heater != chamberHeater)
+		{
+			Heat::HeaterStatus hs = reprap.GetHeat()->GetStatus(heater);
+			if (hs != Heat::HS_off && hs != Heat::HS_fault)
+			{
+				reply.catf("%.1f ", reprap.GetHeat()->GetTemperature(heater));
+			}
+		}
+	}
+	if (bedHeater >= 0)
+	{
+		reply.catf("B:%.1f", reprap.GetHeat()->GetTemperature(bedHeater));
+	}
+	else
+	{
+		// I'm not sure whether Pronterface etc. can handle a missing bed temperature, so return zero
+		reply.cat("B:0.0");
+	}
+	if (chamberHeater >= 0.0)
+	{
+		reply.catf(" C:%.1f", reprap.GetHeat()->GetTemperature(chamberHeater));
+	}
+}
+
+// Check whether we need to report temperatures or status.
+// 'reply' is a convenient buffer that is free for us to use.
+void GCodes::CheckReportDue(GCodeBuffer& gb, StringRef& reply) const
+{
+	const uint32_t now = millis();
+	if (gb.timerRunning)
+	{
+		if (now - gb.whenTimerStarted >= 1000)
+		{
+			if (platform->Emulating() == marlin && (&gb == serialGCode || &gb == telnetGCode))
+			{
+				// In Marlin emulation mode we should return a standard temperature report every second
+				GenerateTemperatureReport(reply);
+				reply.cat('\n');
+				platform->Message(HOST_MESSAGE, reply.Pointer());
+			}/*
+			if (lastAuxStatusReportType >= 0)
+			{
+				// Send a standard status response for PanelDue
+				OutputBuffer * const statusBuf = GenerateJsonStatusResponse(0, -1, ResponseSource::AUX);
+				if (statusBuf != nullptr)
+				{
+					platform->AppendAuxReply(statusBuf);
+				}
+			}*/
+			gb.whenTimerStarted = now;
+		}
+	}
+	else
+	{
+		gb.whenTimerStarted = now;
+		gb.timerRunning = true;
+	}
+}
+
+OutputBuffer *GCodes::GenerateJsonStatusResponse(int type, int seq, ResponseSource source) const
+{
+	OutputBuffer *statusResponse = nullptr;
+	switch (type)
+	{
+		case 0:
+		case 1:
+			statusResponse = reprap.GetLegacyStatusResponse(type + 2, seq);
+			break;
+
+		case 2:
+		case 3:
+		case 4:
+			statusResponse = reprap.GetStatusResponse(type - 1, source);
+			break;
+
+		case 5:
+			statusResponse = reprap.GetConfigResponse();
+			break;
+	}
+	if (statusResponse != nullptr)
+	{
+		statusResponse->cat('\n');
+	}
+	return statusResponse;
+}
 // Resource locking/unlocking
 
 // Lock the resource, returning true if success.

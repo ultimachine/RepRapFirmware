@@ -1242,6 +1242,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 				toolNumber += gb.GetToolNumberAdjust();
 				if (!cancelWait && !ToolHeatersAtSetTemperatures(reprap.GetTool(toolNumber), true))
 				{
+					CheckReportDue(gb, reply);				// check whether we need to send a temperature or status report
 					isWaiting = true;
 					return false;
 				}
@@ -1260,6 +1261,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 					{
 						if (!reprap.GetHeat()->HeaterAtSetTemperature(heaters[i], true))
 						{
+							CheckReportDue(gb, reply);		// check whether we need to send a temperature or status report
 							isWaiting = true;
 							return false;
 						}
@@ -1276,6 +1278,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 				{
 					if (!cancelWait && !reprap.GetHeat()->HeaterAtSetTemperature(chamberHeater, true))
 					{
+						CheckReportDue(gb, reply);			// check whether we need to send a temperature or status report
 						isWaiting = true;
 						return false;
 					}
@@ -1286,6 +1289,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 			// Wait for all heaters to be ready
 			if (!seen && !cancelWait && !reprap.GetHeat()->AllHeatersAtSetTemperatures(true))
 			{
+				CheckReportDue(gb, reply);					// check whether we need to send a temperature or status report
 				isWaiting = true;
 				return false;
 			}
@@ -1541,7 +1545,8 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 					cancelWait = isWaiting = false;
 					break;
 				}
-				// In Marlin emulation mode we should return some sort of (undocumented) message here every second...
+
+        CheckReportDue(gb, reply);			// check whether we need to send a temperature or status report
 				isWaiting = true;
 				return false;
 			}

@@ -23,6 +23,7 @@ Licence: GPL
 #define GCODES_H
 
 #include "RepRapFirmware.h"
+#include "RepRap.h"			// for type ResponseSource
 #include "Libraries/sha1/sha1.h"
 #include "Platform.h"		// for type EndStopHit
 
@@ -197,6 +198,9 @@ private:
 	void ManageTool(GCodeBuffer& gb, StringRef& reply);					// Create a new tool definition
 	void SetToolHeaters(Tool *tool, float temperature);					// Set all a tool's heaters to the temperature.  For M104...
 	bool ToolHeatersAtSetTemperatures(const Tool *tool, bool waitWhenCooling) const; // Wait for the heaters associated with the specified tool to reach their set temperatures
+	void GenerateTemperatureReport(StringRef& reply) const;				// Store a standard-format temperature report in reply
+	OutputBuffer *GenerateJsonStatusResponse(int type, int seq, ResponseSource source) const;	// Generate a M408 response
+	void CheckReportDue(GCodeBuffer& gb, StringRef& reply) const;		// Check whether we need to report temperatures or status
 
 	void SetAllAxesNotHomed();											// Flag all axes as not homed
 	void SetPositions(float positionNow[DRIVES]);						// Set the current position to be this
