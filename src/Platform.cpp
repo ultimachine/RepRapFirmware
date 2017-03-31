@@ -1994,10 +1994,7 @@ void Platform::UpdateMotorCurrent(size_t driver)
 		// we can't set the current on RADDS
 #elif defined(__ARCHIM__)
     float currentPinValue = current / 2500;
-    SerialUSB.print("Driver: "); SerialUSB.print(driver);
-    SerialUSB.print("  Current: "); SerialUSB.print(current);
-    SerialUSB.print("  Value: "); SerialUSB.println(currentPinValue);
-    MessageF(GENERIC_MESSAGE, "Driver: %u  Current: %u  Value: %f\n", driver, current, currentPinValue);
+    MessageF(GENERIC_MESSAGE, "Driver: %u  Current: %g  Value: %g\n", driver, current, currentPinValue);
 	  AnalogOut(MOTOR_CURRENT_PINS[driver],currentPinValue,60000);
 #else //What board is this code for????
 		unsigned short pot = (unsigned short)((0.256*current*8.0*senseResistor + maxStepperDigipotVoltage/2)/maxStepperDigipotVoltage);
