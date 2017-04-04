@@ -1994,7 +1994,6 @@ void Platform::UpdateMotorCurrent(size_t driver)
 		// we can't set the current on RADDS
 #elif defined(__ARCHIM__)
     float currentPinValue = current / 2500;
-    MessageF(GENERIC_MESSAGE, "Driver: %u  Current: %g  Value: %g\n", driver, current, currentPinValue);
 	  AnalogOut(MOTOR_CURRENT_PINS[driver],currentPinValue,60000);
 #else //What board is this code for????
 		unsigned short pot = (unsigned short)((0.256*current*8.0*senseResistor + maxStepperDigipotVoltage/2)/maxStepperDigipotVoltage);
@@ -3069,6 +3068,11 @@ void Platform::Tick()
 		if (currentHeater == HEATERS)
 		{
 			currentHeater = 0;
+		}
+
+		if (zProbeType != 2)
+		{
+			const_cast<ZProbeAveragingFilter&>((tickState == 1) ? zProbeOnFilter : zProbeOffFilter).ProcessReading(GetRawZProbeReading());
 		}
 		++tickState;
 		break;

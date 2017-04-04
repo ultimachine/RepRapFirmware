@@ -211,6 +211,15 @@ bool GCodes::HandleGcode(GCodeBuffer& gb, StringRef& reply)
 		}
 		else
 		{
+#if defined(__ARCHIM__)
+      if(platform->GetZProbeType() == 8){
+        if(accelerometer_status() < 0){
+          platform->Message(GENERIC_MESSAGE, "Error: Accelerometer I2C error\n");
+          cannedCycleMoveCount++;
+          break;
+        }
+      }
+#endif
 			result = SetSingleZProbeAtAPosition(gb, reply);
 		}
 		break;
