@@ -1559,6 +1559,11 @@ void RepRap::FlagTemperatureFault(int8_t dudHeater)
 	{
 		toolList->FlagTemperatureFault(dudHeater);
 	}
+  //Shut down all heaters on fault!
+	for(size_t heater = 0; heater < HEATERS; heater++)
+	{
+		platform->SetHeater(heater, 0.0);
+	}
 }
 
 void RepRap::ClearTemperatureFault(int8_t wasDudHeater)

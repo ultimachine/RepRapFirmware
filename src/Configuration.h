@@ -38,9 +38,9 @@ enum Compatibility
 };
 
 // Generic constants
-
-const float ABS_ZERO = -273.15;						// Celsius
-const float NEARLY_ABS_ZERO = -273.0;				// Celsius
+const float ABS_ZERO = -273.15;
+const float NEARLY_ABS_ZERO = -273.0;
+const float ZERO = 0;           						// Celsius
 const float ROOM_TEMPERATURE = 21.0;				// Celsius
 
 const float LONG_TIME = 300.0;						// Seconds
@@ -65,9 +65,9 @@ const float HOT_ENOUGH_TO_EXTRUDE = 160.0;			// Celsius
 const float HOT_ENOUGH_TO_RETRACT = 90.0;			// Celsius
 
 const uint8_t MAX_BAD_TEMPERATURE_COUNT = 4;		// Number of bad temperature samples permitted before a heater fault is reported
-const float BAD_LOW_TEMPERATURE = -10.0;			// Celsius
-const float DefaultExtruderTemperatureLimit = 262.0; // Celsius
-const float DefaultBedTemperatureLimit = 125.0;		// Celsius
+const float BAD_LOW_TEMPERATURE = 16.5;			// Celsius
+const float DefaultExtruderTemperatureLimit = 290.0; // Celsius
+const float DefaultBedTemperatureLimit = 120.0;		// Celsius
 const float HOT_END_FAN_TEMPERATURE = 45.0;			// Temperature at which a thermostatic hot end fan comes on
 const float BAD_ERROR_TEMPERATURE = 2000.0;			// Must exceed any reasonable 5temperature limit including DEFAULT_TEMPERATURE_LIMIT
 

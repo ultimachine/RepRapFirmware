@@ -62,8 +62,8 @@ void PID::Reset()
 	mode = HeaterMode::off;
 	previousTemperaturesGood = 0;
 	previousTemperatureIndex = 0;
-	activeTemperature = ABS_ZERO;
-	standbyTemperature = ABS_ZERO;
+	activeTemperature = ZERO;
+	standbyTemperature = ZERO;
 	iAccumulator = 0.0;
 	badTemperatureCount = 0;
 	active = false; 						// default to standby temperature

@@ -954,7 +954,8 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 		}
 		break;
 
-	case 105: // Get temperatures
+  case 105: // Get temperatures
+    //Heat::GetActiveTemperature(int8_t heater)
 		{
 			const int8_t bedHeater = reprap.GetHeat()->GetBedHeater();
 			const int8_t chamberHeater = reprap.GetHeat()->GetChamberHeater();
@@ -967,18 +968,21 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 					if (hs != Heat::HS_off && hs != Heat::HS_fault)
 					{
 						reply.catf("%.1f ", reprap.GetHeat()->GetTemperature(heater));
+            reply.catf(" /%.1f ", reprap.GetHeat()->GetActiveTemperature(heater));
 					}
 				}
 			}
 			if (bedHeater >= 0)
 			{
-				reply.catf("B:%.1f", reprap.GetHeat()->GetTemperature(bedHeater));
+				reply.catf("B:%.1f ", reprap.GetHeat()->GetTemperature(bedHeater));
+				reply.catf("/%.1f ", reprap.GetHeat()->GetActiveTemperature(bedHeater));
 			}
+      /*
 			else
 			{
 				// I'm not sure whether Pronterface etc. can handle a missing bed temperature, so return zero
 				reply.cat("B:0.0");
-			}
+			}*/
 			if (chamberHeater >= 0.0)
 			{
 				reply.catf(" C:%.1f", reprap.GetHeat()->GetTemperature(chamberHeater));
@@ -1162,7 +1166,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 				toolNumber += gb.GetToolNumberAdjust();
 				tool = reprap.GetTool(toolNumber);
 			}
-			else
+		else
 			{
 				tool = reprap.GetCurrentOrDefaultTool();
 			}
@@ -1175,7 +1179,8 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 
 			// M109 implies waiting for temperature to be reached, so it doesn't make sense unless the tool has been selected.
 			// Sadly, many slicers use M109 without selecting the tool first. So we select it here if necessary.
-			if (tool != reprap.GetCurrentTool())
+/*
+      if (tool != reprap.GetCurrentTool())
 			{
 				if (!LockMovementAndWaitForStandstill(gb))
 				{
@@ -1189,6 +1194,8 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 			{
 				gb.SetState(GCodeState::m109ToolChangeComplete);
 			}
+*/
+      gb.SetState(GCodeState::m109ToolChangeComplete);
 		}
 		break;
 
@@ -1796,12 +1803,13 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
     }
 		break;
 	case 262: // M262 accelerometer thresholds
-      reply.printf("Current Threshold: %u", accelerometer_recv(0x32) );
       if (gb.Seen('S'))
       {
         uint8_t val = gb.GetIValue();
         reply.printf("Setting Threshold To: %u", val );
         accelerometer_write(0x32,uint8_t(val)); //INT1 THRESHOLD
+      }else{
+        reply.printf("Current Threshold: %u", accelerometer_recv(0x32) );
       }
     break;
 	case 280:	// Servos
