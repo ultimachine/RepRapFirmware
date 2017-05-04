@@ -846,21 +846,6 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 
 	case 85: // Set inactive time
 		break;
-	case 86: // ARCHIM DEBUG STUFF
-		#ifdef __ARCHIM__
-		SerialUSB.println("M86 DEBUG STUFF");
-		#define MOTOR_CURRENT_PWM_X_PIN   12 //PD8  REF1 TIOB8
-		#define MOTOR_CURRENT_PWM_Y_PIN   58 //PA6  REF2 TIOB2
-		#define MOTOR_CURRENT_PWM_Z_PIN   10 //PC29 REFZ TIOB7
-		#define MOTOR_CURRENT_PWM_E0_PIN   3 //PC28 REF3 TIOA7
-		#define MOTOR_CURRENT_PWM_E1_PIN  11 //PD7  REF4 TIOA8
-		AnalogOut(MOTOR_CURRENT_PWM_X_PIN,0.3,60000);
-		AnalogOut(MOTOR_CURRENT_PWM_Y_PIN,0.3,60000);
-		AnalogOut(MOTOR_CURRENT_PWM_Z_PIN,0.3,60000);
-		AnalogOut(MOTOR_CURRENT_PWM_E0_PIN,0.3,60000);
-		AnalogOut(MOTOR_CURRENT_PWM_E1_PIN,0.3,60000);
-		#endif
-		break;
 
 	case 92: // Set/report steps/mm for some axes
 		{
@@ -1177,24 +1162,6 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 				break;			// SetToolHeaters will already have generated an error message
 			}
 
-			// M109 implies waiting for temperature to be reached, so it doesn't make sense unless the tool has been selected.
-			// Sadly, many slicers use M109 without selecting the tool first. So we select it here if necessary.
-/*
-      if (tool != reprap.GetCurrentTool())
-			{
-				if (!LockMovementAndWaitForStandstill(gb))
-				{
-					return false;
-				}
-
-				newToolNumber = tool->Number();
-				gb.SetState(GCodeState::m109ToolChange0);
-			}
-			else
-			{
-				gb.SetState(GCodeState::m109ToolChangeComplete);
-			}
-*/
       gb.SetState(GCodeState::m109ToolChangeComplete);
 		}
 		break;
