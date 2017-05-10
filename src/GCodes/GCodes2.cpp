@@ -1753,20 +1753,27 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 		}
 		break;
 
-		// For case 226, see case 25
 	case 260: // M260 accelerometer init
-    if(accelerometer_init() < 0){
-      reply.copy("Error Initializing Accelerometer");
+    if (gb.Seen('S')){
+      accelerometer_init();
     }else{
-      reply.copy("Accelerometer Initialized");
+      if(accelerometer_init() < 0){
+        reply.copy("Error Initializing Accelerometer");
+      }else{
+        reply.copy("Accelerometer Initialized");
+      }
     }
 		break;
 	case 261: // M261 accelerometer status
-    reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
-    if(accelerometer_status() < 0){
-      reply.copy("Accelerometer I2C Error");
+    if (gb.Seen('S')){
+      accelerometer_status();
     }else{
-      reply.copy("Accelerometer Online");
+      reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
+      if(accelerometer_status() < 0){
+        reply.copy("Accelerometer I2C Error");
+      }else{
+        reply.copy("Accelerometer Online");
+      }
     }
 		break;
 	case 262: // M262 accelerometer thresholds
