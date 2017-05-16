@@ -1704,24 +1704,67 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 
 			case 2:
 				// Successful probing
-				if (GetAxisIsHomed(Z_AXIS))
-				{
-					lastProbedZ = moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust);
-				}
-				else
-				{
-					// The Z axis has not yet been homed, so treat this probe as a homing move.
-					moveBuffer.coords[Z_AXIS] = platform->ZProbeStopHeight() + heightAdjust;
-					SetPositions(moveBuffer.coords);
-					SetAxisIsHomed(Z_AXIS);
-					lastProbedZ = 0.0;
-				}
-				reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
-				cannedCycleMoveCount++;
-				break;
 
-			default:
-				break;
+        if(platform->GetZProbeType() == 8){ //If HE280, do the double tap
+          if (GetAxisIsHomed(Z_AXIS))
+          {
+            if(lastProbedZVerify){  //Added code for double tapping the probe to verify it's accuracy
+              reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
+              lastProbedZVerify = false;
+              cannedCycleMoveCount++;
+              float probeDifference = lastProbedZ - (moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust));
+              if(probeDifference < 0.1 && probeDifference > -0.1){
+                reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
+                cannedCycleMoveCount++;
+              }else{
+                uint8_t zProbeSensitivity = AccelerometerRecv(0x32);
+                if(zProbeSensitivity < 30){
+                  zProbeSensitivity += 2;
+                  platform->MessageF(GENERIC_MESSAGE, "Failed Z probe verification. Setting sensitivity to: %u", zProbeSensitivity);
+                  AccelerometerWrite(0x32,zProbeSensitivity);
+                  cannedCycleMoveCount = 0;
+                }else{
+                  platform->Message(GENERIC_MESSAGE, "Error: Z probe verification failed\n");
+                  cannedCycleMoveCount++;
+                  reprap.GetMove()->SetZBedProbePoint(probePointIndex, platform->GetZProbeDiveHeight(), true, true);
+                }
+              }
+            }else{
+              lastProbedZ = moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust);
+              lastProbedZVerify = true;
+              cannedCycleMoveCount = 0;
+            }
+          }
+          else
+          {
+            // The Z axis has not yet been homed, so treat this probe as a homing move.
+            moveBuffer.coords[Z_AXIS] = platform->ZProbeStopHeight() + heightAdjust;
+            SetPositions(moveBuffer.coords);
+            SetAxisIsHomed(Z_AXIS);
+            lastProbedZ = 0.0;
+            reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
+            cannedCycleMoveCount++;
+          }
+        }else{
+          if (GetAxisIsHomed(Z_AXIS))
+          {
+            lastProbedZ = moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust);
+          }
+          else
+          {
+            // The Z axis has not yet been homed, so treat this probe as a homing move.
+            moveBuffer.coords[Z_AXIS] = platform->ZProbeStopHeight() + heightAdjust;
+            SetPositions(moveBuffer.coords);
+            SetAxisIsHomed(Z_AXIS);
+            lastProbedZ = 0.0;
+          }
+          reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
+          cannedCycleMoveCount++;
+        }
+        break;
+
+      default:
+        break;
 			}
 		}
 		return false;
