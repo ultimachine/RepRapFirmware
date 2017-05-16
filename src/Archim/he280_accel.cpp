@@ -10,7 +10,7 @@
 
 #define He280 Wire1
 
-uint8_t accelerometer_send(uint8_t val)
+uint8_t AccelerometerSend(uint8_t val)
 {
   He280.beginTransmission(ACCELEROMETER_I2C_ADDR);
   He280.write(val);
@@ -26,7 +26,7 @@ uint8_t accelerometer_send(uint8_t val)
   }
 }
 
-uint8_t accelerometer_write(uint8_t reg, uint8_t val)
+uint8_t AccelerometerWrite(uint8_t reg, uint8_t val)
 {
   He280.beginTransmission(ACCELEROMETER_I2C_ADDR);
   He280.write(reg);
@@ -43,11 +43,11 @@ uint8_t accelerometer_write(uint8_t reg, uint8_t val)
   }
 }
 
-uint8_t accelerometer_recv(uint8_t reg)
+uint8_t AccelerometerRecv(uint8_t reg)
 {
   uint8_t receiveByte;
 
-  accelerometer_send(reg); //Send an 8bit register to be read
+  AccelerometerSend(reg); //Send an 8bit register to be read
 
   He280.requestFrom(ACCELEROMETER_I2C_ADDR,1); //Request one 8bit response
 
@@ -70,7 +70,7 @@ uint8_t accelerometer_recv(uint8_t reg)
   }
 }
 
-uint8_t accelerometer_init()
+uint8_t AccelerometerInit()
 {
 
   uint8_t retVal = 1;
@@ -78,57 +78,57 @@ uint8_t accelerometer_init()
   //SerialUSB.println(PSTR("iis2dh accelerometer initializing..."));
   He280.begin(); // join i2c bus
 
-  if(accelerometer_recv(0x0F) < 0) retVal = -1; //WHO AM I = 0x6A
+  if(AccelerometerRecv(0x0F) < 0) retVal = -1; //WHO AM I = 0x6A
 
-  if(accelerometer_recv(0x31) < 0) retVal = -1; //INT1_SRC (31h)
+  if(AccelerometerRecv(0x31) < 0) retVal = -1; //INT1_SRC (31h)
 
   //CTRL_REG1 (20h)
-  if(accelerometer_recv(0x20) < 0) retVal = -1;
-  accelerometer_write(0x20,0b10011100); // ODR 5.376kHz in LPMode [7-4]. Low power enable [3]. Z enable [2].
-  if(accelerometer_recv(0x20) < 0) retVal = -1;
+  if(AccelerometerRecv(0x20) < 0) retVal = -1;
+  AccelerometerWrite(0x20,0b10011100); // ODR 5.376kHz in LPMode [7-4]. Low power enable [3]. Z enable [2].
+  if(AccelerometerRecv(0x20) < 0) retVal = -1;
 
   //CTRL_REG3 (22h)
-  if(accelerometer_recv(0x22) < 0) retVal = -1;
-  accelerometer_write(0x22,0b01000000); // CLICK interrupt on INT1 pin [7]. AOI (And Or Interrupt) on INT1 en [6]. AOI on INT2 en [5].
-  if(accelerometer_recv(0x22) < 0) retVal = -1;
+  if(AccelerometerRecv(0x22) < 0) retVal = -1;
+  AccelerometerWrite(0x22,0b01000000); // CLICK interrupt on INT1 pin [7]. AOI (And Or Interrupt) on INT1 en [6]. AOI on INT2 en [5].
+  if(AccelerometerRecv(0x22) < 0) retVal = -1;
 
   //CTRL_REG4 (23h)
-  if(accelerometer_recv(0x23) < 0) retVal = -1;
-  accelerometer_write(0x23,0b00110000); // Full-scale selection 16G [5-4]. High resolution mode [3].
-  if(accelerometer_recv(0x23) < 0) retVal = -1;
+  if(AccelerometerRecv(0x23) < 0) retVal = -1;
+  AccelerometerWrite(0x23,0b00110000); // Full-scale selection 16G [5-4]. High resolution mode [3].
+  if(AccelerometerRecv(0x23) < 0) retVal = -1;
 
 
   //CTRL_REG5 (24h)
-  if(accelerometer_recv(0x24) < 0) retVal = -1;
-  accelerometer_write(0x24,0b01001010); // FIFO enable [6]. Latch INT1 [3]. Latch INT2 until cleared by read [1].
-  if(accelerometer_recv(0x24) < 0) retVal = -1;
+  if(AccelerometerRecv(0x24) < 0) retVal = -1;
+  AccelerometerWrite(0x24,0b01001010); // FIFO enable [6]. Latch INT1 [3]. Latch INT2 until cleared by read [1].
+  if(AccelerometerRecv(0x24) < 0) retVal = -1;
 
   //INT1_CFG (30h)
-  if(accelerometer_recv(0x30) < 0) retVal = -1;
-  accelerometer_write(0x30,0b100000); // ZHI events enabled [5]. ZLO events enabled [4].
-  if(accelerometer_recv(0x30) < 0) retVal = -1;
+  if(AccelerometerRecv(0x30) < 0) retVal = -1;
+  AccelerometerWrite(0x30,0b100000); // ZHI events enabled [5]. ZLO events enabled [4].
+  if(AccelerometerRecv(0x30) < 0) retVal = -1;
 
   //INT1_SRC (31h)
-  if(accelerometer_recv(0x31) < 0) retVal = -1;
+  if(AccelerometerRecv(0x31) < 0) retVal = -1;
 
   //INT1_THS (32h)  this is the i2c probe
-  if(accelerometer_recv(0x32) < 0) retVal = -1;
-  accelerometer_write(0x32,Z_PROBE_SENSITIVITY); // 7bits
-  if(accelerometer_recv(0x32) < 0) retVal = -1;
+  if(AccelerometerRecv(0x32) < 0) retVal = -1;
+  AccelerometerWrite(0x32,Z_PROBE_SENSITIVITY); // 7bits
+  if(AccelerometerRecv(0x32) < 0) retVal = -1;
 
   //INT1_DURATION (33h)
-  if(accelerometer_recv(0x33) < 0) retVal = -1;
-  accelerometer_write(0x33,0);
-  if(accelerometer_recv(0x33) < 0) retVal = -1;
+  if(AccelerometerRecv(0x33) < 0) retVal = -1;
+  AccelerometerWrite(0x33,0);
+  if(AccelerometerRecv(0x33) < 0) retVal = -1;
 
   return(retVal);
 
 }
 
-uint8_t accelerometer_status()
+uint8_t AccelerometerStatus()
 {
   uint8_t retVal = 1;
-  if(accelerometer_recv(0x31) < 0) retVal = -1; //INT1_SRC (31h)
-  if(accelerometer_recv(0x2D) < 0) retVal = -1;
+  if(AccelerometerRecv(0x31) < 0) retVal = -1; //INT1_SRC (31h)
+  if(AccelerometerRecv(0x2D) < 0) retVal = -1;
   return(retVal);
 }

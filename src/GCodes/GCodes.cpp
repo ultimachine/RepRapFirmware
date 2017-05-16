@@ -505,17 +505,15 @@ void GCodes::Spin()
 			break;
 
 		case GCodeState::gridProbing2a:	// ready to probe the current grid probe point
-#if defined(__ARCHIM__)
-    if(platform->GetZProbeType() == 8){
-      if(accelerometer_status() < 0){
-        reply.copy("ERROR: Accelerometer I2C error");
-        error = true;
-        gb.SetState(GCodeState::normal);
-        break;
+      if(platform->GetZProbeType() == 8){ //If HE280, clear the accelerometer
+        if(AccelerometerStatus() < 0){
+          reply.copy("ERROR: Accelerometer I2C error");
+          error = true;
+          gb.SetState(GCodeState::normal);
+          break;
+        }
       }
-    }
-#endif
-			if (millis() - lastProbedTime >= (uint32_t)(reprap.GetPlatform()->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
+      if (millis() - lastProbedTime >= (uint32_t)(reprap.GetPlatform()->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 			{
 				// Probe the bed at the current XY coordinates
 				// Check for probe already triggered at start
@@ -1676,15 +1674,13 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 		return false;
 
 	case 2:	// Probe the bed
-#if defined(__ARCHIM__)
-    if(platform->GetZProbeType() == 8){
-      if(accelerometer_status() < 0){
+    if(platform->GetZProbeType() == 8){ //If HE280, clear the accelerometer
+      if(AccelerometerStatus() < 0){
 				platform->Message(GENERIC_MESSAGE, "Error: Accelerometer I2C error\n");
         cannedCycleMoveCount++;
         break;
       }
     }
-#endif
 		if (millis() - lastProbedTime >= (uint32_t)(platform->GetCurrentZProbeParameters().recoveryTime * SecondsToMillis))
 		{
 			const float height = (GetAxisIsHomed(Z_AXIS))

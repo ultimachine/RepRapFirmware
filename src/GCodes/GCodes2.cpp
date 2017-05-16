@@ -213,7 +213,7 @@ bool GCodes::HandleGcode(GCodeBuffer& gb, StringRef& reply)
 		{
 #if defined(__ARCHIM__)
       if(platform->GetZProbeType() == 8){
-        if(accelerometer_status() < 0){
+        if(AccelerometerStatus() < 0){
           platform->Message(GENERIC_MESSAGE, "Error: Accelerometer I2C error\n");
           cannedCycleMoveCount++;
           break;
@@ -1755,9 +1755,9 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 
 	case 260: // M260 accelerometer init
     if (gb.Seen('S')){
-      accelerometer_init();
+      AccelerometerInit();
     }else{
-      if(accelerometer_init() < 0){
+      if(AccelerometerInit() < 0){
         reply.copy("Error Initializing Accelerometer");
       }else{
         reply.copy("Accelerometer Initialized");
@@ -1766,10 +1766,10 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
 		break;
 	case 261: // M261 accelerometer status
     if (gb.Seen('S')){
-      accelerometer_status();
+      AccelerometerStatus();
     }else{
       reply.printf("digitalRead(END_STOP_PINS[E0_AXIS]): %u", digitalRead(END_STOP_PINS[E0_AXIS]) );
-      if(accelerometer_status() < 0){
+      if(AccelerometerStatus() < 0){
         reply.copy("Accelerometer I2C Error");
       }else{
         reply.copy("Accelerometer Online");
@@ -1781,9 +1781,9 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
       {
         uint8_t val = gb.GetIValue();
         reply.printf("Setting Threshold To: %u", val );
-        accelerometer_write(0x32,uint8_t(val)); //INT1 THRESHOLD
+        AccelerometerWrite(0x32,uint8_t(val)); //INT1 THRESHOLD
       }else{
-        reply.printf("Current Threshold: %u", accelerometer_recv(0x32) );
+        reply.printf("Current Threshold: %u", AccelerometerRecv(0x32) );
       }
     break;
 	case 280:	// Servos

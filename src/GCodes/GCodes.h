@@ -286,6 +286,7 @@ private:
 
 	// Z probe
 	float lastProbedZ;							// the last height at which the Z probe stopped
+	bool lastProbedZVerify;		  		// Z probe double tap flag
 	uint32_t lastProbedTime;					// time in milliseconds that the probe was last triggered
 	volatile bool zProbeTriggered;				// Set by the step ISR when a move is aborted because the Z probe is triggered
 	size_t gridXindex, gridYindex;				// Which grid probe point is next

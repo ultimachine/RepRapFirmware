@@ -10,10 +10,10 @@
 
 #include <stdint.h>
 
-uint8_t accelerometer_write(uint8_t reg, uint8_t val);
-uint8_t accelerometer_recv(uint8_t reg);
-uint8_t accelerometer_init();
-uint8_t accelerometer_status();
+uint8_t AccelerometerWrite(uint8_t reg, uint8_t val);
+uint8_t AccelerometerRecv(uint8_t reg);
+uint8_t AccelerometerInit();
+uint8_t AccelerometerStatus();
 
 
 #endif /* SRC_ARCHIM_HE280_ACCEL_H_ */
