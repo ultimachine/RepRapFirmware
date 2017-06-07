@@ -69,7 +69,8 @@ const char *resultMessages[] =
 // Probably our UART ISR cannot receive bytes fast enough, perhaps because of the latency of the system tick ISR.
 // 460800b doesn't always manage to connect, but if it does then uploading appears to be reliable.
 // 230400b always manages to connect.
-static const uint32_t uploadBaudRates[] = { 460800, 230400, 115200, 74880 };
+//static const uint32_t uploadBaudRates[] = { 460800, 230400, 115200, 74880 };
+static const uint32_t uploadBaudRates[] = { 115200 };
 
 WifiFirmwareUploader::WifiFirmwareUploader(UARTClass& port)
 	: uploadPort(port), uploadFile(nullptr), state(UploadState::idle)

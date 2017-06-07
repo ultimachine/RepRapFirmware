@@ -1786,6 +1786,12 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
         reply.printf("Current Threshold: %u", AccelerometerRecv(0x32) );
       }
     break;
+
+  case 266: // heater shutdown test
+    CancelPrint();
+    gb.SetState(GCodeState::stopping);
+    break;
+
 	case 280:	// Servos
 		if (gb.Seen('P'))
 		{

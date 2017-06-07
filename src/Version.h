@@ -13,9 +13,9 @@
 #endif
 
 #ifndef DATE
-# define DATE "2017-04-20"
+# define DATE "2017-06-06"
 #endif
 
-#define AUTHORS "reprappro, dc42, chrishamm, t3p3, dnewman"
+#define AUTHORS "reprappro, dc42, chrishamm, t3p3, dnewman, pouncingiguana"
 
 #endif /* SRC_VERSION_H_ */

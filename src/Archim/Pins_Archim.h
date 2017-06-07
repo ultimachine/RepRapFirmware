@@ -3,7 +3,7 @@
 
 #define FIRMWARE_NAME "RepRapFirmware for Archim"
 
-const size_t NumFirmwareUpdateModules = 1;
+const size_t NumFirmwareUpdateModules = 3;
 #define IAP_UPDATE_FILE "iap.bin"
 #define IAP_FIRMWARE_FILE "RepRapFirmware.bin"
 #define WIFI_FIRMWARE_FILE	"DuetWiFiServer.bin"

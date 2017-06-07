@@ -58,7 +58,7 @@ void Network::Init()
 {
 	// Make sure the ESP8266 is held in the reset state
 	pinMode(EspResetPin, OUTPUT_LOW);
-	uploader = new WifiFirmwareUploader(Serial1);
+	uploader = new WifiFirmwareUploader(Serial);
 }
 
 void Network::Activate()

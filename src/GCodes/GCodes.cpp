@@ -1705,7 +1705,7 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
 			case 2:
 				// Successful probing
 
-        if(platform->GetZProbeType() == 8){ //If HE280, do the double tap
+        if(platform->GetZProbeType() == 8){ //If HE280, do a double tap
           if (GetAxisIsHomed(Z_AXIS))
           {
             if(lastProbedZVerify){  //Added code for double tapping the probe to verify it's accuracy
@@ -1713,20 +1713,25 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
               lastProbedZVerify = false;
               cannedCycleMoveCount++;
               float probeDifference = lastProbedZ - (moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust));
-              if(probeDifference < 0.1 && probeDifference > -0.1){
+              if(probeDifference < 0.03 && probeDifference > -0.03){
                 reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
                 cannedCycleMoveCount++;
               }else{
-                uint8_t zProbeSensitivity = AccelerometerRecv(0x32);
-                if(zProbeSensitivity < 30){
-                  zProbeSensitivity += 2;
-                  platform->MessageF(GENERIC_MESSAGE, "Failed Z probe verification. Setting sensitivity to: %u", zProbeSensitivity);
-                  AccelerometerWrite(0x32,zProbeSensitivity);
+                if(firstProbe){
+                  firstProbe = false;
                   cannedCycleMoveCount = 0;
                 }else{
-                  platform->Message(GENERIC_MESSAGE, "Error: Z probe verification failed\n");
-                  cannedCycleMoveCount++;
-                  reprap.GetMove()->SetZBedProbePoint(probePointIndex, platform->GetZProbeDiveHeight(), true, true);
+                  uint8_t zProbeSensitivity = AccelerometerRecv(0x32);
+                  if(zProbeSensitivity < 30){
+                    zProbeSensitivity += 2;
+                    platform->MessageF(GENERIC_MESSAGE, "Failed Z probe verification (%f,%f). Setting sensitivity to: %u", lastProbedZ, (moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust)), zProbeSensitivity);
+                    AccelerometerWrite(0x32,zProbeSensitivity);
+                    cannedCycleMoveCount = 0;
+                  }else{
+                    platform->Message(GENERIC_MESSAGE, "Error: Z probe verification failed\n");
+                    cannedCycleMoveCount++;
+                    reprap.GetMove()->SetZBedProbePoint(probePointIndex, platform->GetZProbeDiveHeight(), true, true);
+                  }
                 }
               }
             }else{
@@ -1745,7 +1750,7 @@ bool GCodes::DoSingleZProbeAtPoint(GCodeBuffer& gb, size_t probePointIndex, floa
             reprap.GetMove()->SetZBedProbePoint(probePointIndex, lastProbedZ, true, false);
             cannedCycleMoveCount++;
           }
-        }else{
+        }else{ // Non HE280 Probe code - single tap
           if (GetAxisIsHomed(Z_AXIS))
           {
             lastProbedZ = moveBuffer.coords[Z_AXIS] - (platform->ZProbeStopHeight() + heightAdjust);

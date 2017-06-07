@@ -285,6 +285,7 @@ private:
 	float extrusionFactors[MaxExtruders];		// extrusion factors (normally 1.0)
 
 	// Z probe
+  bool firstProbe = true;
 	float lastProbedZ;							// the last height at which the Z probe stopped
 	bool lastProbedZVerify;		  		// Z probe double tap flag
 	uint32_t lastProbedTime;					// time in milliseconds that the probe was last triggered
