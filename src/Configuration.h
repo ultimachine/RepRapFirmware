@@ -182,8 +182,8 @@ const unsigned int MaxStackDepth = 5;				// Maximum depth of stack
 // Webserver stuff
 
 #define DEFAULT_PASSWORD "reprap"					// Default machine password
-#define DEFAULT_NAME "My Duet"						// Default machine name
-#define HOSTNAME "duet"								// Default netbios name
+#define DEFAULT_NAME "Archim"						// Default machine name
+#define HOSTNAME "archim"								// Default netbios name
 
 #define INDEX_PAGE_FILE "reprap.htm"
 #define FOUR04_PAGE_FILE "html404.htm"

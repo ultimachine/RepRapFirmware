@@ -1787,10 +1787,21 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
       }
     break;
 
-  case 266: // heater shutdown test
-    CancelPrint();
-    gb.SetState(GCodeState::stopping);
+  case 265: //Set Fast decay Mode
+    reply.printf("Setting Fast decay mode");
+    pinMode(61,OUTPUT_HIGH);
     break;
+
+  case 266: //Set Slow decay Mode
+    reply.printf("Setting Slow decay mode");
+    pinMode(61,OUTPUT_LOW);
+    break;
+
+  case 267: //Set Mixed decay Mode
+    reply.printf("Setting Mixed decay mode");
+    pinMode(61,INPUT);
+    break;
+
 
 	case 280:	// Servos
 		if (gb.Seen('P'))
