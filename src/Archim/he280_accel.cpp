@@ -103,6 +103,12 @@ uint8_t AccelerometerInit()
   AccelerometerWrite(0x24,0b01001010); // FIFO enable [6]. Latch INT1 [3]. Latch INT2 until cleared by read [1].
   if(AccelerometerRecv(0x24) < 0) retVal = -1;
 
+#ifdef HE280_INVERT_INTERRUPT
+  if(AccelerometerRecv(0x25) < 0) retVal = -1;
+  AccelerometerWrite(0x25,0b10); //Interrupt outputs Active-LOW signal from chip.
+  if(AccelerometerRecv(0x25) < 0) retVal = -1;
+#endif
+
   //INT1_CFG (30h)
   if(AccelerometerRecv(0x30) < 0) retVal = -1;
   AccelerometerWrite(0x30,0b100000); // ZHI events enabled [5]. ZLO events enabled [4].
