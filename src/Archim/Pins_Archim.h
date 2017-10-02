@@ -1,6 +1,10 @@
 #ifndef PINS_ARCHIM_H__
 #define PINS_ARCHIM_H__
 
+#include <stdint.h>
+#include <stddef.h>
+#include "Core.h"
+
 #define FIRMWARE_NAME "RepRapFirmware for Archim"
 
 const size_t NumFirmwareUpdateModules = 3;
@@ -39,24 +43,82 @@ const size_t NUM_SERIAL_CHANNELS = 2;			// The number of serial IO channels (USB
 // The numbers of entries in each array must correspond with the values of DRIVES, AXES, or HEATERS. Set values to -1 to flag unavailability.
 
 // DRIVES
+#define HAVE_TMC2130_DRIVERS
+#define ARCHIM20
+#if defined( ARCHIM10 )
+	const Pin ENABLE_PINS[DRIVES] = {
+			41,
+			48,
+			104, //ArchimAddons-96 //PC10 EN Z -AddOns
+			108, //ArchimAddons-97 //PB24 EN3 -Addons
+			28 };
+	const Pin STEP_PINS[DRIVES] = { 40, 49, 36, 78, 26 };
+	const Pin DIRECTION_PINS[DRIVES] = {
+			59,
+			47,
+			113, //ArchimAddons-107 PB10 DIR Z
+			22,
+			27,
+	};
+#elif defined(ARCHIM20)
+	const Pin ENABLE_PINS[DRIVES] = {
+			41,    //PC9  X-EN
+			49,    //PC14 Y-EN
+			44,    //PC19 Z-EN
+			105,   //PB22 E1-EN   -CoreNG_Archim*
+			18,    //PA11 E2-EN
+	};
+	const Pin STEP_PINS[DRIVES] = {
+			38,    //PC6  X-STEP
+			51,    //PC12 Y-STEP
+			46,    //PC17 Z-STEP
+			113,   //PB10 E1-STEP -CoreNG_Archim*
+			22,    //PB26 E2_STEP
+	};
+	const Pin DIRECTION_PINS[DRIVES] = {
+			37,    //PC5  X-DIR
+			96,    //PC11 Y-DIR   -CoreNG_Archim*
+			47,    //PC16 Z-DIR
+			104,   //PC10 E1-DIR  -CoreNG_Archim*
+			108,   //PB24 E2_DIR  -CoreNG_Archim*
+	};
 
-const Pin ENABLE_PINS[DRIVES] = {
-		41,
-		48,
-		104, //ArchimAddons-96 //PC10 EN Z -AddOns
-		108, //ArchimAddons-97 //PB24 EN3 -Addons
-		28 };
-const Pin STEP_PINS[DRIVES] = { 40, 49, 36, 78, 26 };
-const Pin DIRECTION_PINS[DRIVES] = {
-		59,
-		47,
-		113, //ArchimAddons-107 PB10 DIR Z
-		22,
-		27,
-};
 
+#define X_DIAG_PIN         59 //PA4 X_DIAG
+#define Y_DIAG_PIN         48 //PC15 Y_DIAG
+#define Z_DIAG_PIN         36 //PC4 Z_DIAG
+#define E0_DIAG_PIN        78 //PB23 E1_DIAG
+#define E1_DIAG_PIN        25 //PD0 E2_DIAG
+const Pin DIAG_PINS[DRIVES] = { X_DIAG_PIN, Y_DIAG_PIN, Z_DIAG_PIN, E0_DIAG_PIN, E1_DIAG_PIN };
+
+#define X_CS_PIN           39 //PC7 X_nCS
+#define Y_CS_PIN           50 //PC13 Y_nCS
+#define Z_CS_PIN           45 //PC18 Z_nCS
+#define E0_CS_PIN         100 //PC20 E1_nCS -CoreNG_Archim*
+#define E1_CS_PIN          19 //PA10 E2_nCS
+const Pin CS_PINS[DRIVES] = { X_CS_PIN, Y_CS_PIN, Z_CS_PIN, E0_CS_PIN, E1_CS_PIN };
+
+#define TMC2130_USES_SW_SPI
+#define TMC_SWSPI_MISO_PIN 26 //PD1 MISO
+#define TMC_SWSPI_SCK_PIN  27 //PD2 SCK
+#define TMC_SWSPI_MOSI_PIN 28 //PD3 MOSI
+
+//Verbose TMC2130
+#define MYSERIAL SerialUSB
+
+const uint8_t TMC_IRUN_CURRENT[] = { 14, 14, 16, 11, 11 }; // Internal Running Current Scale 0..31 for X Y Z E0 E1
+const uint8_t TMC_IHOLD_CURRENT[] = { 7,  7,  7,  7,  7 };     // Internal Holding Current Scale 0..31 for X Y Z E0 E1
+
+#endif //ARCHIM 2.0
+
+
+#if defined( ARCHIM10 )
 #define MOTOR_CURRENT_PWM_X_PIN   12 //PD8  REF1 TIOB8
 #define MOTOR_CURRENT_PWM_Y_PIN   58 //PA6  REF2 TIOB2
+#elif defined( ARCHIM20 )
+#define MOTOR_CURRENT_PWM_Y_PIN   12 //PD8  REF1 TIOB8
+#define MOTOR_CURRENT_PWM_X_PIN   58 //PA6  REF2 TIOB2
+#endif
 #define MOTOR_CURRENT_PWM_Z_PIN   10 //PC29 REFZ TIOB7
 #define MOTOR_CURRENT_PWM_E0_PIN   3 //PC28 REF3 TIOA7
 #define MOTOR_CURRENT_PWM_E1_PIN  11 //PD7  REF4 TIOA8

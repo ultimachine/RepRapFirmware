@@ -23,6 +23,7 @@
 #endif
 
 #include "he280_accel.h"
+#include "tmc2130.h"
 
 const char* BED_EQUATION_G = "bed.g";
 const char* RESUME_G = "resume.g";
@@ -1801,7 +1802,10 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, StringRef& reply)
     reply.printf("Setting Mixed decay mode");
     pinMode(61,INPUT);
     break;
-
+  case 273: //tmc2130 init
+    reply.printf("tmc2130 init");
+    tmc2130_init();
+    break;
 
 	case 280:	// Servos
 		if (gb.Seen('P'))

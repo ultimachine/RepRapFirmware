@@ -690,7 +690,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.404253909" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1837269774" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
-							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT}  ${LINK_FLAGS_1} ${workspace_loc:/${CoreName}/SAM3X8E/cores/arduino/syscalls.o} ${INPUTS} ${LINK_FLAGS_2}" id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1393602017" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
+							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT}  ${LINK_FLAGS_1} ../../CoreNG/SAM3X8E/cores/arduino/syscalls.o ${INPUTS} ${LINK_FLAGS_2}" id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1393602017" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option id="gnu.cpp.link.option.nostdlibs.1211732716" name="No startup or default libs (-nostdlib)" superClass="gnu.cpp.link.option.nostdlibs" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.paths.1184730457" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/Archim/}&quot;"/>
@@ -698,7 +698,7 @@
 								<option id="gnu.cpp.link.option.libs.1566231795" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="${CoreName}"/>
 								</option>
-								<option id="gnu.cpp.link.option.flags.793220392" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="-Os -Wl,--gc-sections -Wl,--fatal-warnings -mcpu=cortex-m3 -T${workspace_loc:/${CoreName}/variants/duet/linker_scripts/gcc/flash.ld} -Wl,-Map,${workspace_loc:/${ProjName}/${ConfigName}}/${BuildArtifactFileBaseName}.map" valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.793220392" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="-Os -Wl,--gc-sections -Wl,--fatal-warnings -mcpu=cortex-m3 -T../../CoreNG/variants/duet/linker_scripts/gcc/flash.ld -Wl,-Map,../../RepRapFirmware/${ConfigName}/${BuildArtifactFileBaseName}.map" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1878368198" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -774,10 +774,10 @@
 		</configuration>
 		<configuration configurationName="DuetWiFi"/>
 		<configuration configurationName="Duet085"/>
-		<configuration configurationName="Release">
+		<configuration configurationName="ArchimWiFi">
 			<resource resourceType="PROJECT" workspacePath="/RepRapFirmware"/>
 		</configuration>
-		<configuration configurationName="ArchimWiFi">
+		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/RepRapFirmware"/>
 		</configuration>
 	</storageModule>

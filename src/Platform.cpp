@@ -37,6 +37,10 @@
 # include "FirmwareUpdater.h"
 #endif
 
+#ifdef HAVE_TMC2130_DRIVERS
+# include "tmc2130.h"
+#endif
+
 #include <climits>
 #include <malloc.h>
 
@@ -265,7 +269,7 @@ void Platform::Init()
 	AnalogOut(MOTOR_CURRENT_PWM_E1_PIN,0.3,60000);
 	ConfigurePin(g_APinDescription[MOTOR_CURRENT_PWM_E0_PIN]);
 	ConfigurePin(g_APinDescription[MOTOR_CURRENT_PWM_E1_PIN]);
-
+  #if defined( ARCHIM10 )
 	const uint8_t MICROSTEP_MODE_PINS[] = {
 		39,  //PC7 MOD0E1 //As listed in schematic
 		38,  //PC6 MOD1E1
@@ -288,6 +292,9 @@ void Platform::Init()
 	{
 		pinMode(MICROSTEP_MODE_PINS[pcount],INPUT_PULLUP);
 	}
+  #elif defined( ARCHIM20 )
+	tmc2130_init();
+  #endif //ARCHIM10
 
 #endif
 
