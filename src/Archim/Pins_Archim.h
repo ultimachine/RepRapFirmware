@@ -65,7 +65,7 @@ const size_t NUM_SERIAL_CHANNELS = 2;			// The number of serial IO channels (USB
 			41,    //PC9  X-EN
 			49,    //PC14 Y-EN
 			44,    //PC19 Z-EN
-			105,   //PB22 E1-EN   -CoreNG_Archim*
+			106,   //PB22 E1-EN   -CoreNG_Archim*
 			18,    //PA11 E2-EN
 	};
 	const Pin STEP_PINS[DRIVES] = {
