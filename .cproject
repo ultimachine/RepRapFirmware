@@ -711,6 +711,7 @@
 								<option id="gnu.cpp.compiler.option.other.other.1853268271" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -std=gnu++11 -mcpu=cortex-m3 -mthumb -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -nostdlib --param max-inline-insns-single=500" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.811283061" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/cores/arduino}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/libraries/TMC2130Stepper/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/libraries/Flash}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/libraries/SharedSpi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${CoreName}/libraries/Storage}&quot;"/>
@@ -742,6 +743,7 @@
 									<listOptionValue builtIn="false" value="printf=iprintf"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.221507685" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.files.358050298" superClass="gnu.cpp.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.465941903" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 						</toolChain>
