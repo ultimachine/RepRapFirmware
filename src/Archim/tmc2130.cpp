@@ -1,11 +1,12 @@
 
 #include "Pins_Archim.h"
+#include "TMC2130Stepper.h"
 
 #ifndef MYSERIAL
 	#define MYSERIAL(x)
 #endif
 
-#ifdef TMC2130_USES_SW_SPI
+#ifdef TMC2130_USES_SW_SPI_nvm_using_library_now
   #define tmc_transfer(x) shiftData( TMC_SWSPI_MOSI_PIN, TMC_SWSPI_SCK_PIN, TMC_SWSPI_MISO_PIN, MSBFIRST, x)
 
   //Combined shiftOut and shiftIn from Arduino wiring_shift.c
@@ -46,7 +47,7 @@
     return value;
   }
 #endif
-
+#if 0
 void tmc2130_transfer_begin() {
   #ifdef TMC2130_USES_HW_SPI
     SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE3));
@@ -68,7 +69,6 @@ byte tmc2130_transfer(uint8_t val) {
     return tmc_transfer(val);
   #endif
 }
-
 
 void tmc2130_write(uint8_t chipselect, uint8_t address,uint8_t wval1,uint8_t wval2,uint8_t wval3,uint8_t wval4)
 {
@@ -138,7 +138,7 @@ void tmc2130_chopconf(uint8_t cs, bool extrapolate256 = 1, uint16_t microstep_re
 }
 
 
-void tmc2130_init()
+void tmc2130_init2()
 {
 #ifdef HAVE_TMC2130_DRIVERS
   #ifdef TMC2130_USES_HW_SPI
@@ -173,6 +173,28 @@ void tmc2130_init()
   }
   
 #endif //HAVE_TMC2130_DRIVERS
+}
+
+#endif //0
+
+void tmc2130_init() {
+	TMC2130Stepper stepperX(ENABLE_PINS[0], DIRECTION_PINS[0], STEP_PINS[0], CS_PINS[0]);
+	TMC2130Stepper stepperY(ENABLE_PINS[1], DIRECTION_PINS[1], STEP_PINS[1], CS_PINS[1]);
+	TMC2130Stepper stepperZ(ENABLE_PINS[2], DIRECTION_PINS[2], STEP_PINS[2], CS_PINS[2]);
+	TMC2130Stepper stepperE0(ENABLE_PINS[3], DIRECTION_PINS[3], STEP_PINS[3], CS_PINS[3]);
+	TMC2130Stepper stepperE1(ENABLE_PINS[4], DIRECTION_PINS[4], STEP_PINS[4], CS_PINS[4]);
+}
+
+#define HOLD_MULTIPLIER 0.5
+#define R_SENSE 0.22
+#define INTERPOLATE true
+
+void tmc2130_init_stepper(TMC2130Stepper &st)
+{
+	st.begin();
+    st.setCurrent(900, R_SENSE, HOLD_MULTIPLIER);
+    st.microsteps(32);
+    st.interpolate(INTERPOLATE);
 }
 
 
